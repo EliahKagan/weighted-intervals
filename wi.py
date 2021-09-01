@@ -82,6 +82,7 @@ class IntGraph:
             for dest in self._adj[src]:
                 new_cost = costs[src] + costs[dest]
                 if costs[dest] < new_cost:
+                    print(f'Updating {src!r} -> {dest!r} ({new_cost})') # FIXME: remove after debugging
                     parents[dest] = src
                     costs[dest] = new_cost
 
@@ -207,3 +208,16 @@ class IntervalSet:
     def compute_max_cost_nonoverlapping_subset(self):
         """Solves the weighted job scheduling problem on the intervals."""
         return self._graph.compute_max_cost_path()
+
+
+if __name__ == '__main__':
+    intervals = IntervalSet()
+    intervals.add(10, 20, 2)
+    intervals.add(20, 30, 2)
+    print(intervals.compute_max_cost_nonoverlapping_subset())
+
+    intervals.add(15, 25, 5)
+    print(intervals.compute_max_cost_nonoverlapping_subset())
+
+    intervals.add(-1, -0.5, 50)
+    print(intervals.compute_max_cost_nonoverlapping_subset())
