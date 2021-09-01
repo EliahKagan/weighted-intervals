@@ -80,7 +80,7 @@ class IntGraph:
 
         for src in self._kahn_toposort():
             for dest in self._adj[src]:
-                new_cost = costs[src] + costs[dest]
+                new_cost = costs[src] + self._weights[dest]
                 if costs[dest] < new_cost:
                     print(f'Updating {src!r} -> {dest!r} ({new_cost})') # FIXME: remove after debugging
                     parents[dest] = src
