@@ -40,6 +40,11 @@ class IntGraph:
         self._weights.append(weight)
         return self.order - 1
 
+    def increase_weight(self, vertex, weight):
+        """Increases the vertex's weight to the new weight, if larger."""
+        self._ensure_exists(vertex)
+        self._weights[vertex] = max(self._weights[vertex], weight)
+
     def add_edge(self, src, dest):
         """Adds a directed edge with the given endpoints."""
         self._ensure_exists(src)
@@ -139,7 +144,6 @@ class Graph:
 
     def add_vertex(self, key, weight):
         """Adds the key as a vertex with the given weight."""
-        # FIXME: Shouldn't this succeed, updating the weight to the max of both?
         if key in self._table:
             raise KeyError(f'vertex key #{key!r} already exists')
 
@@ -147,6 +151,10 @@ class Graph:
         assert index == len(self._keys)
         self._keys.append(key)
         self._table[key] = index
+
+    def increase_weight(self, key, weight):
+        """Increases the key's vertex's weight to the new weight, if larger."""
+        self._graph.increase_weight(self._table[key], weight)
 
     def add_edge(self, src, dest):
         """Adds a directed edge with the given endpoint keys."""
@@ -184,11 +192,11 @@ class IntervalSet:
 
         new_interval = Interval(start, finish)
 
-        # FIXME: What if a newer interval has same endpoints but higher weight?
         try:
             self._graph.add_vertex(new_interval, weight)
         except KeyError:
-            return
+            self._graph.increase_weight(new_interval, weight)
+            return # Changing the weight doesn't create (or destroy) any edges.
 
         for old_interval in self._graph.vertices:
             if finish <= old_interval.start:
