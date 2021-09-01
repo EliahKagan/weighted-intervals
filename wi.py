@@ -82,7 +82,6 @@ class IntGraph:
             for dest in self._adj[src]:
                 new_cost = costs[src] + self._weights[dest]
                 if costs[dest] < new_cost:
-                    print(f'Updating {src!r} -> {dest!r} ({new_cost})') # FIXME: remove after debugging
                     parents[dest] = src
                     costs[dest] = new_cost
 
@@ -182,7 +181,7 @@ class IntervalSet:
     __slots__ = ('_graph',)
 
     def __init__(self):
-        """Creates an initially empty interval bag."""
+        """Creates an initially empty set of intervals."""
         self._graph = Graph()
 
     def add(self, start, finish, weight):
@@ -197,7 +196,7 @@ class IntervalSet:
             self._graph.add_vertex(new_interval, weight)
         except KeyError:
             self._graph.increase_weight(new_interval, weight)
-            return # Changing the weight doesn't create (or destroy) any edges.
+            return  # Changing the weight doesn't add (nor remove) any edges.
 
         for old_interval in self._graph.vertices:
             if finish <= old_interval.start:
@@ -210,7 +209,9 @@ class IntervalSet:
         return self._graph.compute_max_cost_path()
 
 
-if __name__ == '__main__':
+# TODO: This shoud probably just be a doctest on the IntervalSet type.
+def test_run():
+    """Tries out the IntervalSet type with a fairly simple test case."""
     intervals = IntervalSet()
     intervals.add(10, 20, 2)
     intervals.add(20, 30, 2)
@@ -221,3 +222,7 @@ if __name__ == '__main__':
 
     intervals.add(-1, -0.5, 50)
     print(intervals.compute_max_cost_nonoverlapping_subset())
+
+
+if __name__ == '__main__':
+    test_run()
