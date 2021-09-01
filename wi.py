@@ -49,7 +49,7 @@ class IntGraph:
         self._indegrees[dest] += 1
         self._size += 1
 
-    def compute_max_weight_path(self):
+    def compute_max_cost_path(self):
         """
         Returns a path of maximal cost (total weight), and that cost.
         The graph must be acyclic. Single-vertex "paths" are considered.
@@ -132,10 +132,16 @@ class Graph:
         """The number of edges in the graph."""
         return self._graph.size
 
+    @property
+    def vertices(self):
+        """Yields all vertex keys."""
+        return iter(self._keys)
+
     def add_vertex(self, key, weight):
         """Adds the key as a vertex with the given weight."""
+        # FIXME: Shouldn't this succeed, updating the weight to the max of both?
         if key in self._table:
-            raise KeyError(f'vertex key #{key:r} already exists')
+            raise KeyError(f'vertex key #{key!r} already exists')
 
         index = self._graph.add_vertex(weight)
         assert index == len(self._keys)
@@ -146,12 +152,50 @@ class Graph:
         """Adds a directed edge with the given endpoint keys."""
         self._graph.add_edge(self._table[src], self._table[dest])
 
-    def compute_max_weight_path(self):
+    def compute_max_cost_path(self):
         """
         Returns a path of maximal cost (total weight), and that cost.
         The graph must be acyclic. Single-vertex "paths" are considered.
         """
-        int_path, cost = self._graph.compute_max_weight_path()
+        int_path, cost = self._graph.compute_max_cost_path()
 
         return PathCostPair(path=[self._keys[index] for index in int_path],
                             cost=cost)
+
+
+Interval = collections.namedtuple('Interval', ('start', 'finish'))
+Interval.__doc__ = """A time interval."""
+
+
+class IntervalSet:
+    """A collection of possibly overlapping positive-length intervals."""
+
+    __slots__ = ('_graph',)
+
+    def __init__(self):
+        """Creates an initially empty interval bag."""
+        self._graph = Graph()
+
+    def add(self, start, finish, weight):
+        """Adds the interval from start to finish to the collection."""
+        if finish <= start:
+            raise ValueError(
+                    f'{start!r} to {finish!r} has nonpositive duration')
+
+        new_interval = Interval(start, finish)
+
+        # FIXME: What if a newer interval has same endpoints but higher weight?
+        try:
+            self._graph.add_vertex(new_interval, weight)
+        except KeyError:
+            return
+
+        for old_interval in self._graph.vertices:
+            if finish <= old_interval.start:
+                self._graph.add_edge(new_interval, old_interval)
+            elif old_interval.finish <= start:
+                self._graph.add_edge(old_interval, new_interval)
+
+    def compute_max_cost_nonoverlapping_subset(self):
+        """Solves the weighted job scheduling problem on the intervals."""
+        return self._graph.compute_max_cost_path()
