@@ -196,7 +196,7 @@ class IntervalSet:
             self._graph.add_vertex(new_interval, weight)
         except KeyError:
             self._graph.increase_weight(new_interval, weight)
-            return  # Changing the weight doesn't add (nor remove) any edges.
+            return  # Changing the weight doesn't add (or remove) any edges.
 
         for old_interval in self._graph.vertices:
             if finish <= old_interval.start:
@@ -209,7 +209,7 @@ class IntervalSet:
         return self._graph.compute_max_cost_path()
 
 
-# TODO: This shoud probably just be a doctest on the IntervalSet type.
+# TODO: This should probably just be a doctest on the IntervalSet type.
 def test_run():
     """Tries out the IntervalSet type with a fairly simple test case."""
     intervals = IntervalSet()
