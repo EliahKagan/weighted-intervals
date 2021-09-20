@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=.86">
+    <title>Weighted Interval Scheduling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300;400&display=swap">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
+          integrity="sha512-TktJbycEG5Van9KvrSHFUcYOKBroD7QCYkEe73HAutODCw9QTFcvF6fuxioYM1h6THNudK1GjVidazj6EslK4A=="
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.0/full/pyodide.js" defer></script>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <a class="github-fork-ribbon"
+         href="https://github.com/EliahKagan/weighted-intervals"
+         data-ribbon="Fork me on GitHub"
+         title="Fork me on GitHub">Fork me on GitHub</a>
+    </header>
+    <main>
+      <h1>Weighted Interval Scheduling</h1>
+      <form>
+        <fieldset>
+          <label for="input">All intervals:</label>
+          <textarea id="input" name="input" rows="6">10 20 2
+20 30 2
+15 25 5</textarea>
+        </fieldset>
+        <fieldset>
+          <label for="output">Solution:</label>
+          <textarea id="output" name="output" rows="6" readonly="true"></textarea>
+        </fieldset>
+      </form>
+    </main>
+    <footer>
+      <p><small><a href="https://github.com/EliahKagan/weighted-intervals">weighted-intervals, alpha 1</a></small></p>
+    </footer>
+  </body>
+</html>
