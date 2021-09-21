@@ -170,10 +170,14 @@ class Graph:
         return PathCostPair(path=[self._keys[index] for index in int_path],
                             cost=cost)
 
+class Interval(collections.namedtuple('IntervalBase', ('start', 'finish'))):
+    """A time interval."""
 
-Interval = collections.namedtuple('Interval', ('start', 'finish'))
-Interval.__doc__ = """A time interval."""
+    __slots__ = ()
 
+    def __str__(self):
+        """Simple string representation as space-separated numbers."""
+        return f'{self.start:g} {self.finish:g}'
 
 class IntervalSet:
     """A collection of possibly overlapping positive-length intervals."""
@@ -207,6 +211,25 @@ class IntervalSet:
     def compute_max_cost_nonoverlapping_subset(self):
         """Solves the weighted job scheduling problem on the intervals."""
         return self._graph.compute_max_cost_path()
+
+
+def parse_lines(lines):
+    """Parses lines of triples of numbers."""
+    for line in lines:
+        content = line.strip()
+        if content:
+            yield map(float, content.split())
+
+
+def solve_text_input(lines):
+    """Solves weighted job scheduling, with text-based input and output."""
+    intervals = IntervalSet()
+
+    for start, finish, weight in parse_lines(lines):
+        intervals.add(start, finish, weight)
+
+    path, cost = intervals.compute_max_cost_nonoverlapping_subset()
+    return '\n'.join(map(str, path)), cost
 
 
 # TODO: This should probably just be a doctest on the IntervalSet type.

@@ -23,6 +23,19 @@ h1 {
   font-weight: 300;
 }
 
+p#status {
+  background-color: lightyellow;
+  color: darkred;
+}
+
+p#status.error {
+  color: red;
+}
+
+p#status.ok {
+  color:darkgreen;
+}
+
 p a {
   border-bottom: 1px solid transparent;
   color: inherit;
