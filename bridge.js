@@ -24,8 +24,8 @@
                 await result;
             }
         } catch (error) {
-            status.innerText = message;
             setOk(false);
+            status.innerText = message;
             if (rethrow) {
                 throw error;
             }
@@ -50,14 +50,14 @@
         await runOrFailWith("Oh no, Pyodide couldn't run the code!",
             async () => py.runPython(await (await fetch('wi.py')).text()));
 
-        status.innerText = 'Pyodide loaded successfully!';
         setOk(true);
+        status.innerText = 'Pyodide loaded successfully.';
         return py;
     })();
 
     const solveTextInput = pyodide.globals.get('solve_text_input');
 
-    const solve = async function(alwaysReportOkStatus) {
+    const solve = async function(appendOkStatus) {
         let pathText, cost;
 
         const ok = await runOrFailWith(
@@ -65,15 +65,20 @@
             () => [pathText, cost] = solveTextInput(input.value.split('\n')),
             false);
 
-        if (ok) {
-            output.value = pathText;
-            if (alwaysReportOkStatus || !status.classList.contains('ok')) {
-                status.innerText = `OK. Total cost is ${cost}.`;
-                setOk(true);
-            }
+        if (!ok) return;
+
+        output.value = pathText;
+
+        const report = `Total cost is ${cost}.`;
+
+        if (status.classList.contains('ok') && appendOkStatus) {
+            status.innerText += ` ${report}`;
+        } else {
+            setOk(true);
+            status.innerText = `OK. ${report}`
         }
     };
 
-    await solve(false);
-    input.addEventListener('input', async () => await solve(true));
+    await solve(true);
+    input.addEventListener('input', async () => await solve(false));
 })();
