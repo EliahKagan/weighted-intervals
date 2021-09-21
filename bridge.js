@@ -58,24 +58,28 @@
     const solveTextInput = pyodide.globals.get('solve_text_input');
 
     const solve = async function(appendOkStatus) {
-        let pathText, cost;
+        let path, cost;
 
         const ok = await runOrFailWith(
             "Malformed or incomplete input, can't solve.",
-            () => [pathText, cost] = solveTextInput(input.value.split('\n')),
+            () => [path, cost] = solveTextInput(input.value.split('\n')).toJs(),
             false);
 
-        if (!ok) return;
+        if (!ok) {
+            return;
+        }
 
-        output.value = pathText;
+        output.value = path.join('\n');
 
-        const report = `Total cost is ${cost}.`;
+        const report = (path.length == 1
+            ? `Total cost is ${cost}, using ${path.length} interval.`
+            : `Total cost is ${cost}, using ${path.length} intervals.`);
 
-        if (status.classList.contains('ok') && appendOkStatus) {
+        if (appendOkStatus && status.classList.contains('ok')) {
             status.innerText += ` ${report}`;
         } else {
             setOk(true);
-            status.innerText = `OK. ${report}`
+            status.innerText = `OK. ${report}`;
         }
     };
 

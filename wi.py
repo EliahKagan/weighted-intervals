@@ -257,7 +257,7 @@ def solve_text_input(lines):
         intervals.add(start, finish, weight)
 
     path, cost = intervals.compute_max_cost_nonoverlapping_subset()
-    return '\n'.join(map(str, path)), cost
+    return [str(interval) for interval in path], cost
 
 
 # TODO: This should probably just be a doctest on the IntervalSet type.
