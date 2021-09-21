@@ -1,9 +1,21 @@
 (async function () {
     'use strict';
 
+    const VERBOSE = true;
+
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const status = document.getElementById('status');
+
+    const setOk = function (ok) {
+        if (ok) {
+            status.classList.remove('error');
+            status.classList.add('ok');
+        } else {
+            status.classList.remove('ok');
+            status.classList.add('error');
+        }
+    };
 
     const runOrFailWith = async function (message, action, rethrow = true) {
         try {
@@ -13,12 +25,17 @@
             }
         } catch (error) {
             status.innerText = message;
-            status.classList.add('error');
+            setOk(false);
             if (rethrow) {
                 throw error;
             }
-            console.log(error);
+            if (VERBOSE) {
+                console.log(error);
+            }
+            return false;
         }
+
+        return true;
     };
 
     const pyodide = await (async function () {
@@ -34,7 +51,7 @@
             async () => py.runPython(await (await fetch('wi.py')).text()));
 
         status.innerText = 'Pyodide loaded successfully!';
-        status.classList.add('ok');
+        setOk(true);
         return py;
     })();
 
@@ -43,15 +60,16 @@
     const solve = async function(alwaysReportOkStatus) {
         let pathText, cost;
 
-        await runOrFailWith("Malformed or incomplete input, can't solve.",
+        const ok = await runOrFailWith(
+            "Malformed or incomplete input, can't solve.",
             () => [pathText, cost] = solveTextInput(input.value.split('\n')),
             false);
 
-        if (pathText !== undefined) {
+        if (ok) {
             output.value = pathText;
             if (alwaysReportOkStatus || !status.classList.contains('ok')) {
                 status.innerText = `OK. Total cost is ${cost}.`;
-                status.classList.add('ok');
+                setOk(true);
             }
         }
     };
