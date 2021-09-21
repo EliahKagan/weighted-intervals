@@ -4,6 +4,10 @@
 import collections
 
 
+WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
+WeightedVertex.__doc__ = """A vertex together with its associated weight."""
+
+
 PathCostPair = collections.namedtuple('PathCostPair', ('path', 'cost'))
 PathCostPair.__doc__ = """A path through a graph, and its cost."""
 
@@ -59,10 +63,18 @@ class IntGraph:
         Returns a path of maximal cost (total weight), and that cost.
         The graph must be acyclic. Single-vertex "paths" are considered.
         """
+        vertices, cost = self._compute_max_cost_path_vertices()
+
+        path = [WeightedVertex(vertex=vertex, weight=self._weights[vertex])
+                for vertex in vertices]
+
+        return PathCostPair(path=path, cost=cost)
+
+    def _compute_max_cost_path_vertices(self):
         if self.order == 0:
             raise ValueError("can't find max weight path in empty graph")
 
-        parents, costs = self._compute_all_max_weight_paths()
+        parents, costs = self._compute_max_weight_paths_tree()
         finish = max(range(self.order), key=lambda vertex: costs[vertex])
         path = []
 
@@ -74,7 +86,7 @@ class IntGraph:
         path.reverse()
         return PathCostPair(path=path, cost=costs[finish])
 
-    def _compute_all_max_weight_paths(self):
+    def _compute_max_weight_paths_tree(self):
         parents = [None] * self.order
         costs = self._weights[:]
 
@@ -167,17 +179,26 @@ class Graph:
         """
         int_path, cost = self._graph.compute_max_cost_path()
 
-        return PathCostPair(path=[self._keys[index] for index in int_path],
-                            cost=cost)
+        path = [WeightedVertex(vertex=self._keys[index], weight=weight)
+                for index, weight in int_path]
 
-class Interval(collections.namedtuple('IntervalBase', ('start', 'finish'))):
-    """A time interval."""
+        return PathCostPair(path=path, cost=cost)
+
+
+Interval = collections.namedtuple('Interval', ('start', 'finish'))
+Interval.__doc__ = """A time interval."""
+
+
+class WeightedInterval(collections.namedtuple('WeightedIntervalBase',
+                                              ('start', 'finish', 'weight'))):
+    """A weighted time interval."""
 
     __slots__ = ()
 
     def __str__(self):
         """Simple string representation as space-separated numbers."""
-        return f'{self.start:g} {self.finish:g}'
+        return f'{self.start:g} {self.finish:g} {self.weight:g}'
+
 
 class IntervalSet:
     """A collection of possibly overlapping positive-length intervals."""
@@ -210,14 +231,21 @@ class IntervalSet:
 
     def compute_max_cost_nonoverlapping_subset(self):
         """Solves the weighted job scheduling problem on the intervals."""
-        return self._graph.compute_max_cost_path()
+        graph_path, cost = self._graph.compute_max_cost_path()
+
+        weighted_intervals = [WeightedInterval(start=interval.start,
+                                               finish=interval.finish,
+                                               weight=weight)
+                              for interval, weight in graph_path]
+
+        return PathCostPair(path=weighted_intervals, cost=cost)
 
 
 def parse_lines(lines):
     """Parses lines of triples of numbers."""
     for line in lines:
         content = line.strip()
-        if content:
+        if content and not content.startswith('#'):
             yield map(float, content.split())
 
 
