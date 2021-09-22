@@ -215,6 +215,9 @@ class IntervalSet:
             raise ValueError(
                     f'{start!r} to {finish!r} has nonpositive duration')
 
+        if weight <= 0:
+            raise ValueError(f'nonpositive weight {weight!r}')
+
         new_interval = Interval(start, finish)
 
         try:
