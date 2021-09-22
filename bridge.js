@@ -1,7 +1,7 @@
 (async function () {
     'use strict';
 
-    const VERBOSE = true;
+    const VERBOSE = false;
 
     const CH = Object.freeze({
         HELLIP: '\u2026',
@@ -21,7 +21,7 @@
         }
     };
 
-    const runOrFailWith = async function (message, action, rethrow = true) {
+    const tryRun = async function (rethrow, getMessage, action) {
         try {
             const result = action();
             if (result instanceof Promise) {
@@ -29,7 +29,7 @@
             }
         } catch (error) {
             setOk(false);
-            status.innerText = message;
+            status.innerText = getMessage(error);
             if (rethrow) {
                 throw error;
             }
@@ -42,16 +42,32 @@
         return true;
     };
 
+    const getExceptionMessage = function (error) {
+        if (error.name !== 'PythonError') {
+            return 'Oh no, unexpected JavaScript error! (Likely bug.)';
+        }
+
+        const match = error.message.match(/(?<=\nValueError:\s+).*(?=\n*$)/);
+        if (match === null) {
+            return 'Oh no, unexpected Python error! (Likely bug.)';
+        }
+
+        return `Error: ${match[0]}`;
+    };
+
+    const js = function(pyProxy) {
+        return pyProxy.toJs(); // FIXME: Also clean up.
+    }
+
     const pyodide = await (async function () {
         let py;
 
-        await runOrFailWith('Oh no, Pyodide failed to load!', async () => {
-            py = await loadPyodide({
-                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/',
-            });
-        });
+        await tryRun(true, _e => 'Oh no, Pyodide failed to load!',
+            async () => py = await loadPyodide({
+                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/'
+            }));
 
-        await runOrFailWith("Oh no, Pyodide couldn't run the code!",
+        await tryRun(true, _e => "Oh no, Pyodide couldn't run the code!",
             async () => py.runPython(await (await fetch('wi.py')).text()));
 
         setOk(true);
@@ -64,12 +80,8 @@
     const solve = async function(appendOkStatus) {
         let path, cost;
 
-        const ok = await runOrFailWith(
-            "Malformed or incomplete input, can't solve.",
-            () => [path, cost] = solveTextInput(input.value.split('\n')).toJs(),
-            false);
-
-        if (!ok) {
+        if (!await tryRun(false, getExceptionMessage, () =>
+                [path, cost] = js(solveTextInput(input.value.split('\n'))))) {
             return;
         }
 

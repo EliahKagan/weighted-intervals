@@ -247,12 +247,14 @@ class IntervalSet:
 
         duration = finish - start
         if not math.isfinite(duration):
-            raise ValueError(f'{start} to {finish} has non-finite duration')
+            raise ValueError(
+                f'{start:g} to {finish:g} has non-finite duration')
         if duration <= 0:
-            raise ValueError(f'{start} to {finish} has nonpositive duration')
+            raise ValueError(
+                f'{start:g} to {finish:g} has nonpositive duration')
 
         if weight <= 0:
-            raise ValueError(f'nonpositive weight {weight}')
+            raise ValueError(f'nonpositive weight {weight:g}')
 
 
 def parse_lines(lines):
@@ -260,9 +262,15 @@ def parse_lines(lines):
     for line in lines:
         comment_index = line.find('#')
         uncommented = (line if comment_index < 0 else line[:comment_index])
+
         tokens = uncommented.split()
-        if tokens:
-            yield map(float, tokens)
+        if not tokens:
+            continue
+
+        if len(tokens) != 3:
+            raise ValueError(f'bad interval: need 3 values, got {len(tokens)}')
+
+        yield map(float, tokens)
 
 
 def solve_text_input(lines):
