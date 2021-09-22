@@ -26,6 +26,7 @@ h1 {
 p#status {
   background-color: lightyellow;
   color: darkred;
+  font-weight: 400;
 }
 
 p#status.error {
@@ -47,10 +48,6 @@ p a:hover {
   border-bottom-color: inherit;
 }
 
-small {
-  color: #555;
-}
-
 fieldset {
   display: inline-block;
 }
@@ -61,11 +58,9 @@ label, textarea {
 
 textarea {
   font-family: 'Source Code Pro', monospace;
-}
-
-textarea {
   font-size: .9rem;
-  max-width: 12rem;
+  max-width: 14rem;
+  white-space: pre;
 }
 
 label {
@@ -74,4 +69,8 @@ label {
 
 footer {
   margin-top: 2.5rem;
+}
+
+small {
+  color: #555;
 }

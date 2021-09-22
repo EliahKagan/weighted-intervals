@@ -26,16 +26,24 @@
     </header>
     <main>
       <h1>Weighted Interval Scheduling</h1>
+      <p>
+        <small>
+          You can enter space-separated start, finish, and weight values,
+          without units. Durations and weights must be positive (and finite).
+          Floating point numbers and # comments are supported.
+        </small>
+      </p>
       <form>
         <fieldset>
           <label for="input">All intervals:</label>
-          <textarea id="input" name="input" rows="6">10 20 2
+          <textarea id="input" name="input" rows="8" cols="24"># start finish weight
+10 20 2
 20 30 2
 15 25 5</textarea>
         </fieldset>
         <fieldset>
           <label for="output">Solution:</label>
-          <textarea id="output" name="output" rows="6" readonly="true"></textarea>
+          <textarea id="output" name="output" rows="8" cols="24" readonly="true"></textarea>
         </fieldset>
       </form>
       <p id="status">Loading Pyodide&hellip;</p>

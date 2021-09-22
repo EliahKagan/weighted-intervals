@@ -2,6 +2,7 @@
 """wi - job scheduling with weighted intervals"""
 
 import collections
+import math
 
 
 WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
@@ -211,13 +212,7 @@ class IntervalSet:
 
     def add(self, start, finish, weight):
         """Adds the interval from start to finish to the collection."""
-        if finish <= start:
-            raise ValueError(
-                    f'{start!r} to {finish!r} has nonpositive duration')
-
-        if weight <= 0:
-            raise ValueError(f'nonpositive weight {weight!r}')
-
+        self._check_values(start, finish, weight)
         new_interval = Interval(start, finish)
 
         try:
@@ -243,13 +238,31 @@ class IntervalSet:
 
         return PathCostPair(path=weighted_intervals, cost=cost)
 
+    @staticmethod
+    def _check_values(start, finish, weight):
+        named = (('start', start), ('finish', finish), ('weight', weight))
+        for name, value in named:
+            if not math.isfinite(value):
+                raise ValueError(f'non-finite {name}')
+
+        duration = finish - start
+        if not math.isfinite(duration):
+            raise ValueError(f'{start} to {finish} has non-finite duration')
+        if duration <= 0:
+            raise ValueError(f'{start} to {finish} has nonpositive duration')
+
+        if weight <= 0:
+            raise ValueError(f'nonpositive weight {weight}')
+
 
 def parse_lines(lines):
     """Parses lines of triples of numbers."""
     for line in lines:
-        content = line.strip()
-        if content and not content.startswith('#'):
-            yield map(float, content.split())
+        comment_index = line.find('#')
+        uncommented = (line if comment_index < 0 else line[:comment_index])
+        tokens = uncommented.split()
+        if tokens:
+            yield map(float, tokens)
 
 
 def solve_text_input(lines):
