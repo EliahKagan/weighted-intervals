@@ -3,6 +3,10 @@
 
     const VERBOSE = true;
 
+    const CH = Object.freeze({
+        HELLIP: '\u2026',
+    });
+
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const status = document.getElementById('status');
@@ -51,7 +55,7 @@
             async () => py.runPython(await (await fetch('wi.py')).text()));
 
         setOk(true);
-        status.innerText = 'Pyodide loaded successfully.';
+        status.innerText = `Pyodide loaded successfully${CH.HELLIP}`;
         return py;
     })();
 
