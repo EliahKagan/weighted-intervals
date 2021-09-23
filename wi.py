@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """wi - job scheduling with weighted intervals"""
 
+import bisect
 import collections
 import math
+import operator
 
 
 WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
@@ -211,7 +213,7 @@ class IntervalSet:
         self._graph = Graph()
 
     def add(self, start, finish, weight):
-        """Adds the interval from start to finish to the collection."""
+        """Adds a weighted interval from start to finish to the collection."""
         self._check_values(start, finish, weight)
         new_interval = Interval(start, finish)
 
@@ -255,6 +257,66 @@ class IntervalSet:
 
         if weight <= 0:
             raise ValueError(f'nonpositive weight {weight:g}')
+
+
+class MappedView:
+    """
+    A mapped read-only view of a list.
+    Lets bisect_left and bisect/bisect_right use custom keys.
+    """
+
+    __slots__ = ('_elems', '_mapper')
+
+    def __init__(self, elems, mapper):
+        """Creates a view of elems via mapper."""
+        self._elems = elems
+        self._mapper = mapper
+
+    def __bool__(self):
+        """Tells if the list has any elements."""
+        return bool(self._elems)
+
+    def __len__(self):
+        """Returns the number of elements in the list."""
+        return len(self._elems)
+
+    def __getitem__(self, index):
+        """Gets the mapped value at the given index."""
+        return self._mapper(self._elems[index])
+
+
+class Plotter:
+    """Visualizes all input intervals, with solution intervals colored."""
+
+    __slots__ = ('_rows',)
+
+    def __init__(self):
+        """Creates a new plotter, initially holding no intervals."""
+        self._rows = []
+
+    def add(self, start, finish, weight):
+        """Adds an interval to be plotted in the first row where it fits."""
+        if start >= finish:
+            raise ValueError('refusing to plot nonpositive-duration interval')
+
+        interval = WeightedInterval(start=start, finish=finish, weight=weight)
+
+        for row in self._rows:
+            if self._try_insert(row, interval):
+                return
+
+        self._rows.append([interval])
+
+    @staticmethod
+    def _try_insert(row, interval):
+        finish_times = MappedView(row, operator.attrgetter('finish'))
+        index = bisect.bisect_right(finish_times, interval.start)
+
+        if index == len(row) or interval.finish <= row[index].start:
+            row.insert(index, interval)
+            return True
+
+        return False
 
 
 def parse_lines(lines):
