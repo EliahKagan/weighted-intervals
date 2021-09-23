@@ -8,10 +8,12 @@ import operator
 
 
 WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
+
 WeightedVertex.__doc__ = """A vertex together with its associated weight."""
 
 
 PathCostPair = collections.namedtuple('PathCostPair', ('path', 'cost'))
+
 PathCostPair.__doc__ = """A path through a graph, and its cost."""
 
 
@@ -189,18 +191,24 @@ class Graph:
 
 
 Interval = collections.namedtuple('Interval', ('start', 'finish'))
+
 Interval.__doc__ = """A time interval."""
 
 
-class WeightedInterval(collections.namedtuple('WeightedIntervalBase',
-                                              ('start', 'finish', 'weight'))):
-    """A weighted time interval."""
+WeightedInterval = collections.namedtuple('WeightedInterval',
+                                          ('start', 'finish', 'weight'))
 
-    __slots__ = ()
+WeightedInterval.__doc__ = """A weighted time interval."""
 
-    def __str__(self):
-        """Simple string representation as space-separated numbers."""
-        return f'{self.start:g} {self.finish:g} {self.weight:g}'
+
+MarkedWeightedInterval = collections.namedtuple(
+    'MarkedWeightedInterval',
+    ('start', 'finish', 'weight', 'mark'))
+
+MarkedWeightedInterval.__doc__ = """
+A weighted time interval that carries a marking.
+This is used to specify if it should be highlighted in a plot.
+"""
 
 
 class IntervalSet:
@@ -294,18 +302,21 @@ class Plotter:
         """Creates a new plotter, initially holding no intervals."""
         self._rows = []
 
-    def add(self, start, finish, weight):
+    def add(self, weighted_interval, highlight):
         """Adds an interval to be plotted in the first row where it fits."""
-        if start >= finish:
+        if weighted_interval.start >= weighted_interval.finish:
             raise ValueError('refusing to plot nonpositive-duration interval')
 
-        interval = WeightedInterval(start=start, finish=finish, weight=weight)
+        mwi = MarkedWeightedInterval(start=weighted_interval.start,
+                                     finish=weighted_interval.finish,
+                                     weight=weighted_interval.weight,
+                                     mark=highlight)
 
         for row in self._rows:
-            if self._try_insert(row, interval):
+            if self._try_insert(row, mwi):
                 return
 
-        self._rows.append([interval])
+        self._rows.append([mwi])
 
     @staticmethod
     def _try_insert(row, interval):
@@ -320,7 +331,7 @@ class Plotter:
 
 
 def parse_lines(lines):
-    """Parses lines of triples of numbers."""
+    """Parses lines of triples of numbers to weighted intervals."""
     for line in lines:
         comment_index = line.find('#')
         uncommented = (line if comment_index < 0 else line[:comment_index])
@@ -332,18 +343,46 @@ def parse_lines(lines):
         if len(tokens) != 3:
             raise ValueError(f'bad interval: need 3 values, got {len(tokens)}')
 
-        yield map(float, tokens)
+        yield WeightedInterval._make(map(float, tokens))
+
+
+def do_solve(weighted_intervals):
+    """Core solving helper, for solve_text_input."""
+    interval_set = IntervalSet()
+    for start, finish, weight in weighted_intervals:
+        interval_set.add(start, finish, weight)
+
+    return interval_set.compute_max_cost_nonoverlapping_subset()
+
+
+def build_plotter(all_weighted_intervals, weighted_intervals_to_highlight):
+    """Plotter-building helper, for solve_text_input."""
+    need_marks = set(weighted_intervals_to_highlight)
+    plotter = Plotter()
+
+    for weighted_interval in all_weighted_intervals:
+        if weighted_interval in need_marks:
+            plotter.add(weighted_interval, highlight=True)
+            need_marks.remove(weighted_interval)
+        else:
+            plotter.add(weighted_interval, highlight=False)
+
+    return plotter
 
 
 def solve_text_input(lines):
-    """Solves weighted job scheduling, with text-based input and output."""
-    intervals = IntervalSet()
+    """
+    Solves weighted job scheduling. Takes text-based input. Returns text-based
+    and SVG plot output.
+    """
+    weighted_intervals = list(parse_lines(lines))
+    path, cost = do_solve(weighted_intervals)
+    path_lines = [f'{interval.start:g} {interval.finish:g} {interval.weight:g}'
+                  for interval in path]
 
-    for start, finish, weight in parse_lines(lines):
-        intervals.add(start, finish, weight)
+    plotter = build_plotter(weighted_intervals, path)
 
-    path, cost = intervals.compute_max_cost_nonoverlapping_subset()
-    return [str(interval) for interval in path], cost
+    return path_lines, cost # FIXME: Also return a plot. (Use the plotter.)
 
 
 # TODO: This should probably just be a doctest on the IntervalSet type.
