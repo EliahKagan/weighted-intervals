@@ -3,8 +3,11 @@
 
 import bisect
 import collections
+import io
 import math
 import operator
+
+from matplotlib import pyplot as plt
 
 
 WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
@@ -296,16 +299,21 @@ class MappedView:
 class Plotter:
     """Visualizes all input intervals, with solution intervals colored."""
 
-    __slots__ = ('_rows',)
+    __slots__ = ('_rows', '_min_start', '_max_finish')
 
     def __init__(self):
         """Creates a new plotter, initially holding no intervals."""
         self._rows = []
+        self._min_start = math.inf
+        self._max_finish = -math.inf
 
     def add(self, weighted_interval, highlight):
         """Adds an interval to be plotted in the first row where it fits."""
         if weighted_interval.start >= weighted_interval.finish:
             raise ValueError('refusing to plot nonpositive-duration interval')
+
+        self._min_start = min(self._min_start, weighted_interval.start)
+        self._max_finish = max(self._max_finish, weighted_interval.finish)
 
         mwi = MarkedWeightedInterval(start=weighted_interval.start,
                                      finish=weighted_interval.finish,
@@ -317,6 +325,29 @@ class Plotter:
                 return
 
         self._rows.append([mwi])
+
+    # TODO: (1) Show touching intervals as distinct. (2) Annotate weights.
+    def plot(self):
+        """Creates a plot of all added intervals, as SVG code."""
+        if not self._rows:  # TODO: Should this really be an IndexError?
+            raise IndexError('no intervals to plot')
+
+        assert math.isfinite(self._min_start)
+        assert math.isfinite(self._max_finish)
+
+        fig, ax = plt.subplots()
+        ax.set_xlim(xmin=self._min_start, xmax=self._max_finish)
+        ax.set_ylim(ymin=0, ymax=(len(self._rows) + 2))
+        ax.invert_yaxis()
+
+        for i, row in enumerate(self._rows):
+            for start, finish, _weight, highlight in row:
+                ax.hlines(y=(i + 1), xmin=start, xmax=finish,
+                          color=('green' if highlight else 'gray'), lw=15)
+
+        with io.StringIO() as dump:
+            fig.savefig(dump, format='svg')
+            return dump.getvalue()
 
     @staticmethod
     def _try_insert(row, interval):
@@ -382,7 +413,7 @@ def solve_text_input(lines):
 
     plotter = build_plotter(weighted_intervals, path)
 
-    return path_lines, cost # FIXME: Also return a plot. (Use the plotter.)
+    return path_lines, cost  # FIXME: Also return a plot. (Use the plotter.)
 
 
 # TODO: This should probably just be a doctest on the IntervalSet type.

@@ -1,2 +1,5 @@
 # Cached Python bytecode.
 __pycache__/
+
+# Test SVG file.
+/abc.svg
