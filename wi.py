@@ -340,7 +340,8 @@ class Plotter:
         fig, ax = plt.subplots()
         fig.set_figwidth(10)
         fig.set_figheight(4)
-        ax.spines[['left', 'right', 'top']].set_visible(False)
+        for side in ('left', 'right', 'top'):
+            ax.spines[side].set_visible(False)
         ax.yaxis.set_visible(False)
         ax.set_xlim(xmin=(self._min_start - pad),
                     xmax=(self._max_finish + pad))
@@ -357,7 +358,7 @@ class Plotter:
                     lw=0.3))
 
         with io.StringIO() as dump:
-            fig.savefig(dump, format='svg')
+            fig.savefig(dump, format='svg', bbox_inches='tight')
             return dump.getvalue()
 
     @staticmethod
@@ -414,7 +415,7 @@ def build_plotter(all_weighted_intervals, weighted_intervals_to_highlight):
 
 def solve_text_input(lines):
     """
-    Solves weighted job scheduling. Takes text-based input. Returns text-based
+    Solves weighted job scheduling. Takes line-based input. Returns line-based
     and SVG plot output.
     """
     weighted_intervals = list(parse_lines(lines))
@@ -422,9 +423,9 @@ def solve_text_input(lines):
     path_lines = [f'{interval.start:g} {interval.finish:g} {interval.weight:g}'
                   for interval in path]
 
-    plotter = build_plotter(weighted_intervals, path)
+    svg_plot = build_plotter(weighted_intervals, path).plot()
 
-    return path_lines, cost  # FIXME: Also return a plot. (Use the plotter.)
+    return path_lines, cost, svg_plot
 
 
 # TODO: This should probably just be a doctest on the IntervalSet type.

@@ -10,6 +10,7 @@
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const status = document.getElementById('status');
+    const plotDiv = document.getElementById('plot-div');
 
     const setOk = function (ok) {
         if (ok) {
@@ -85,11 +86,12 @@
 
     const solveTextInput = pyodide.globals.get('solve_text_input');
 
-    const solve = async function(appendOkStatus) {
-        let path, cost;
+    const solve = async function (appendOkStatus) {
+        const lines = input.value.split('\n');
 
+        let path, cost, svgPlot;
         if (!await tryRun(false, getExceptionMessage, () =>
-                [path, cost] = js(solveTextInput(input.value.split('\n'))))) {
+                [path, cost, svgPlot] = js(solveTextInput(lines)))) {
             return;
         }
 
@@ -105,6 +107,8 @@
             setOk(true);
             status.innerText = `OK. ${report}`;
         }
+
+        plotDiv.innerHTML = svgPlot.substring(svgPlot.indexOf('<svg'));
     };
 
     await solve(true);
