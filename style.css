@@ -48,6 +48,10 @@ p a:hover {
   border-bottom-color: inherit;
 }
 
+small {
+  color: #555;
+}
+
 fieldset {
   display: inline-block;
 }
@@ -69,11 +73,11 @@ label {
 
 footer {
   margin-top: 2.5rem;
-  padding-bottom: .5rem;
 }
 
-small {
-  color: #555;
+footer p {
+  line-height: 1.45;
+  padding-bottom: .35rem;
 }
 
 footer small {
@@ -87,6 +91,10 @@ footer #project-name-version {
 
 footer #dependency-summary {
   float: right;
+}
+
+footer #dependency-summary:hover>a {
+  border-bottom-color: inherit;
 }
 
 .omitted {

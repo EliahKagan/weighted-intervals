@@ -65,8 +65,11 @@
         return `Error: ${match[0]}`;
     };
 
+    // Converts Python data to JavaScript data and releases their memory.
     const js = function(pyProxy) {
-        return pyProxy.toJs(); // FIXME: Also clean up.
+        const ret = pyProxy.toJs();
+        pyProxy.destroy();
+        return ret;
     }
 
     // Provides access to the Python interpreter and Python code.
