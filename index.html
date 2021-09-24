@@ -4,14 +4,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=.86">
-    <title>Weighted Interval Scheduling</title>
+    <title>Weighted Interval Scheduling Visualization</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
           crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:wght@300;400&display=swap">
+          href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:ital,wght@0,300;0,400;1,400&display=swap">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
           integrity="sha512-TktJbycEG5Van9KvrSHFUcYOKBroD7QCYkEe73HAutODCw9QTFcvF6fuxioYM1h6THNudK1GjVidazj6EslK4A=="
@@ -28,7 +28,13 @@
          title="Fork me on GitHub">Fork me on GitHub</a>
     </header>
     <main>
-      <h1>Weighted Interval Scheduling</h1>
+      <h1>Weighted Job Scheduling</h1>
+      <p>
+        <small>
+          Given a set of weighted intervals, this shows a subset that
+          <em>maximizes</em> the cost (total weight).
+        </small>
+      </p>
       <p>
         <small>
           You can enter space-separated start, finish, and weight values,
@@ -63,7 +69,12 @@
     <footer>
       <p>
         <small>
-          <a href="https://github.com/EliahKagan/weighted-intervals">weighted-intervals, alpha 1</a>
+          <span id="project-name-version">
+            <a href="https://github.com/EliahKagan/weighted-intervals">weighted-intervals, alpha 1</a>
+          </span>
+          <span id="dependency-summary">
+            Built with <a href="https://pyodide.org/en/stable/">Pyodide</a>, <a href="https://matplotlib.org/">Matplotlib</a>, and other libraries.
+          </span>
         </small>
       </p>
     </footer>

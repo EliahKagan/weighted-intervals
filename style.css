@@ -69,6 +69,7 @@ label {
 
 footer {
   margin-top: 2.5rem;
+  padding-bottom: .5rem;
 }
 
 small {
@@ -78,6 +79,14 @@ small {
 footer small {
   color: inherit;
   font-weight: 300;
+}
+
+footer #project-name-version {
+  float: left;
+}
+
+footer #dependency-summary {
+  float: right;
 }
 
 .omitted {

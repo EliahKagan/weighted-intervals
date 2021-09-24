@@ -1,17 +1,24 @@
 (async function () {
     'use strict';
 
+    // Log more error/debugging info to console? (May decrease performance.)
     const VERBOSE = false;
 
+    // Assume the user is still typing for this many milliseconds.
+    const INPUT_WAIT_TIME = 200;
+
+    // Symbolic representations of some Unicode characters.
     const CH = Object.freeze({
         HELLIP: '\u2026',
     });
 
+    // Frequently accessed elements (the input textarea and all outputs).
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const status = document.getElementById('status');
     const plotDiv = document.getElementById('plot-div');
 
+    // Applies styles to indicate whether the last computation succeeded.
     const setOk = function (ok) {
         if (ok) {
             status.classList.remove('error');
@@ -22,6 +29,7 @@
         }
     };
 
+    // Attempts an action, showing a status message and optionally throwing.
     const tryRun = async function (rethrow, getMessage, action) {
         try {
             const result = action();
@@ -43,6 +51,7 @@
         return true;
     };
 
+    // Parses exception text, possibly from Python, into a brief message.
     const getExceptionMessage = function (error) {
         if (error.name !== 'PythonError') {
             return 'Oh no, unexpected JavaScript error! (Likely bug.)';
@@ -60,6 +69,7 @@
         return pyProxy.toJs(); // FIXME: Also clean up.
     }
 
+    // Provides access to the Python interpreter and Python code.
     const pyodide = await (async function () {
         let py;
 
@@ -74,7 +84,8 @@
         await tryRun(true, _e => "Oh no, Pyodide couldn't load libraries!",
             () => py.loadPackage('matplotlib'));
 
-        status.innerText = `Running code for this page${CH.HELLIP}`;
+        status.innerText =
+            `Running initialization code for this page${CH.HELLIP}`;
 
         await tryRun(true, _e => "Oh no, Pyodide couldn't run the code!",
             async () => py.runPython(await (await fetch('wi.py')).text()));
@@ -84,8 +95,10 @@
         return py;
     })();
 
+    // Computation entry-point function, marshaled from Python.
     const solveTextInput = pyodide.globals.get('solve_text_input');
 
+    // Tries to solve the weighted job scheduling problem and report results.
     const solve = async function (appendOkStatus) {
         const lines = input.value.split('\n');
 
@@ -111,7 +124,16 @@
         plotDiv.innerHTML = svgPlot.substring(svgPlot.indexOf('<svg'));
     };
 
+    // A timeout, to limit the rate of recomputation as the user enters input.
+    let timer = undefined;
+
+    // Schedules an attempt to solve after a brief wait for more input.
+    const handleInput = function () {
+        clearTimeout(timer);
+        timer = setTimeout(async () => await solve(false), INPUT_WAIT_TIME);
+    };
+
     await solve(true);
     document.getElementById('legend').classList.remove('omitted');
-    input.addEventListener('input', async () => await solve(false));
+    input.addEventListener('input', handleInput);
 })();

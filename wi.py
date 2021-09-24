@@ -416,7 +416,7 @@ def build_plotter(all_weighted_intervals, weighted_intervals_to_highlight):
 def solve_text_input(lines):
     """
     Solves weighted job scheduling. Takes line-based input. Returns line-based
-    and SVG plot output.
+    and SVG plot output. (The web version uses this; see bridge.js.)
     """
     weighted_intervals = list(parse_lines(lines))
     path, cost = do_solve(weighted_intervals)
