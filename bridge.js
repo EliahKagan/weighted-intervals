@@ -112,5 +112,6 @@
     };
 
     await solve(true);
+    document.getElementById('legend').classList.remove('omitted');
     input.addEventListener('input', async () => await solve(false));
 })();

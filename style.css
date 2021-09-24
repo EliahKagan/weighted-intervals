@@ -74,3 +74,28 @@ footer {
 small {
   color: #555;
 }
+
+footer small {
+  color: inherit;
+  font-weight: 300;
+}
+
+.omitted {
+  display: none;
+}
+
+.box-green, .box-gray {
+  border: 1px solid black;
+  display: inline-block;
+  height: .9em;
+  vertical-align: -20%;
+  width: .9em;
+}
+
+.box-green {
+  background-color: green;
+}
+
+.box-gray {
+  background-color: gray;
+}
