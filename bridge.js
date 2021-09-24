@@ -67,6 +67,14 @@
                 indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.18.0/full/'
             }));
 
+        status.innerText =
+            `Loading matplotlib and other libraries${CH.HELLIP}`;
+
+        await tryRun(true, _e => "Oh no, Pyodide couldn't load libraries!",
+            () => py.loadPackage('matplotlib'));
+
+        status.innerText = `Running code for this page${CH.HELLIP}`;
+
         await tryRun(true, _e => "Oh no, Pyodide couldn't run the code!",
             async () => py.runPython(await (await fetch('wi.py')).text()));
 
