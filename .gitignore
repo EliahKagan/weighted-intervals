@@ -2,4 +2,4 @@
 __pycache__/
 
 # Test SVG file.
-/abc.svg
+/test-plotting.svg

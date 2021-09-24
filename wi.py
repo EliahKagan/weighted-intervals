@@ -7,7 +7,8 @@ import io
 import math
 import operator
 
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 
 WeightedVertex = collections.namedtuple('WeightedVertex', ('vertex', 'weight'))
@@ -326,24 +327,34 @@ class Plotter:
 
         self._rows.append([mwi])
 
-    # TODO: (1) Show touching intervals as distinct. (2) Annotate weights.
+    # TODO: (1) Use symbolic constants for magic numbers. (2) Annotate weights.
     def plot(self):
         """Creates a plot of all added intervals, as SVG code."""
         if not self._rows:  # TODO: Should this really be an IndexError?
             raise IndexError('no intervals to plot')
 
-        assert math.isfinite(self._min_start)
-        assert math.isfinite(self._max_finish)
+        assert math.isfinite(self._min_start), 'no left (lower) bound'
+        assert math.isfinite(self._max_finish), 'no right (upper) bound'
+        pad = (self._max_finish - self._min_start) * 0.01
 
         fig, ax = plt.subplots()
-        ax.set_xlim(xmin=self._min_start, xmax=self._max_finish)
-        ax.set_ylim(ymin=0, ymax=(len(self._rows) + 2))
+        fig.set_figwidth(10)
+        fig.set_figheight(4)
+        ax.spines[['left', 'right', 'top']].set_visible(False)
+        ax.yaxis.set_visible(False)
+        ax.set_xlim(xmin=(self._min_start - pad),
+                    xmax=(self._max_finish + pad))
+        ax.set_ylim(ymin=-0.1, ymax=(len(self._rows) + 0.1))
         ax.invert_yaxis()
 
         for i, row in enumerate(self._rows):
             for start, finish, _weight, highlight in row:
-                ax.hlines(y=(i + 1), xmin=start, xmax=finish,
-                          color=('green' if highlight else 'gray'), lw=15)
+                ax.add_patch(Rectangle(
+                    xy=(start, i + 0.05),
+                    width=(finish - start), height=0.8,
+                    edgecolor='black',
+                    facecolor=('green' if highlight else 'gray'),
+                    lw=0.3))
 
         with io.StringIO() as dump:
             fig.savefig(dump, format='svg')
