@@ -29,6 +29,12 @@
     </header>
     <main>
       <h1>Weighted Job Scheduling</h1>
+      <!--
+        FIXME: This small may have been reasonable when it was just in one or
+        two places (since I'm using normalize.css). But now it's in several:
+        every p element except p#status. I should just put "small" text in p,
+        elements, with p#status styled bigger than the others in style.css.
+      -->
       <p>
         <small>
           Given a set of weighted intervals, this shows a subset that
@@ -61,8 +67,8 @@
       <p id="legend" class="omitted">
         <small>
           Intervals in the solution are plotted in
-          <span class="box-green"></span>&#8239;green.
-          Others are <span class="box-gray"></span>&#8239;gray.
+          <span class="swatch-green"></span>&#8239;green.
+          Others are <span class="swatch-gray"></span>&#8239;gray.
         </small>
       </p>
     </main>

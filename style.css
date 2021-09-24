@@ -73,7 +73,7 @@ label {
 }
 
 footer {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
 }
 
 footer p {
@@ -102,7 +102,7 @@ footer #dependency-summary:hover>a {
   display: none;
 }
 
-.box-green, .box-gray {
+.swatch-green, .swatch-gray {
   border: 1px solid black;
   display: inline-block;
   height: .9em;
@@ -110,10 +110,10 @@ footer #dependency-summary:hover>a {
   width: .9em;
 }
 
-.box-green {
+.swatch-green {
   background-color: green;
 }
 
-.box-gray {
+.swatch-gray {
   background-color: gray;
 }
