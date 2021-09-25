@@ -258,7 +258,10 @@ class IntervalSet:
                 self._graph.add_edge(old_interval, new_interval)
 
     def compute_max_cost_nonoverlapping_subset(self):
-        """Solves the weighted job scheduling problem on the intervals."""
+        """
+        Solves the weighted job scheduling problem on the intervals.
+        The algorithm's running time is quadratic in the number of intervals.
+        """
         graph_path, cost = self._graph.compute_max_cost_path()
 
         weighted_intervals = [WeightedInterval(start=interval.start,
@@ -290,7 +293,7 @@ class IntervalSet:
 class MappedView:
     """
     A mapped read-only view of a list.
-    Lets bisect_left and bisect/bisect_right use custom keys.
+    This enables bisect_left and bisect/bisect_right to use custom keys.
     """
 
     __slots__ = ('_elems', '_mapper')
@@ -325,7 +328,11 @@ class Plotter:
         self._max_finish = -math.inf
 
     def add(self, weighted_interval, highlight):
-        """Adds an interval to be plotted in the first row where it fits."""
+        """
+        Adds an interval to be plotted in the first row where it fits.
+        This can take time linear in the number of intervals added so far. So
+        to add all intervals takes quadratic time (like the solving algorithm).
+        """
         if weighted_interval.start >= weighted_interval.finish:
             raise ValueError('refusing to plot nonpositive-duration interval')
 
@@ -379,6 +386,17 @@ class Plotter:
 
     @staticmethod
     def _try_insert(row, interval):
+        """
+        Inserts an interval into a row if it would not overlap with any
+        interval already there. This takes time linear in the size of the row.
+
+        Implementation note: Binary search (bisect_right) affords no asymptotic
+        speedup here. I still use it, to improve performance by a constant
+        factor if the row is large, by deferencing far fewer pointers than
+        otherwise, which is usually a slow operation compared to moving
+        contiguous memory. (This rationale is analogous to that of the bisect
+        module's "insort" functions.)
+        """
         finish_times = MappedView(row, operator.attrgetter('finish'))
         index = bisect.bisect_right(finish_times, interval.start)
 

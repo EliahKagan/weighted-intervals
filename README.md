@@ -22,7 +22,7 @@ solution. It shows text-based output and also plots all input intervals,
 highlighting the ones that part of the solution that was found.
 
 This is *alpha 1* of weighted-intervals. The web version is implemented, but
-buggy. The documentation is also meagre&mdash;I&rsquo;ve described the
+buggy. The documentation is also meager&mdash;I&rsquo;ve described the
 algorithm I used, somewhat, in [`wi.py`](wi.py), but there should really be a
 Markdown file that explains it clearly. The CLI version is not yet implemented
 (except in the sense that you could import [`wi.py`](wi.py) and interact with
