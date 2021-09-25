@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# wi - job scheduling with weighted intervals
+# wi.py - job scheduling with weighted intervals (main implementation file)
 #
 # Copyright (C) 2021 Eliah Kagan <degeneracypressure@gmail.com>
 #
