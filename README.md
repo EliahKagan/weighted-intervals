@@ -19,7 +19,7 @@
 
 This solves the weighted interval scheduling problem and visualizes the
 solution. It shows text-based output and also plots all input intervals,
-highlighting the ones that part of the solution it found.
+highlighting the ones that are part of the solution it found.
 
 This is *alpha 1* of weighted-intervals. The web version is implemented, but
 buggy. The documentation is also meager&mdash;I&rsquo;ve described the
@@ -36,7 +36,7 @@ here.**](https://eliahkagan.github.io/weighted-intervals/)
 **weighted-intervals** is written by Eliah Kagan. It is licensed under
 [0BSD](https://spdx.org/licenses/0BSD.html). See [**`LICENSE`**](LICENSE).
 
-Its [dependencies](#dependencies) are written by different authors have
+Its [dependencies](#dependencies) are written by different authors and have
 different licenses, though they are all free open-source software. Furthermore,
 none of them are included in this repository&mdash;they are obtained from CDNs
 (for the web version) or via [pipenv](https://github.com/pypa/pipenv) (if you
