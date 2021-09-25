@@ -29,24 +29,14 @@
     </header>
     <main>
       <h1>Weighted Job Scheduling</h1>
-      <!--
-        FIXME: This small may have been reasonable when it was just in one or
-        two places (since I'm using normalize.css). But now it's in several:
-        every p element except p#status. I should just put "small" text in p,
-        elements, with p#status styled bigger than the others in style.css.
-      -->
       <p>
-        <small>
-          Given a set of weighted intervals, this shows a subset that
-          <em>maximizes</em> the cost (total weight).
-        </small>
+        Given a set of weighted intervals, this shows a subset that
+        <em>maximizes</em> the cost (total weight).
       </p>
       <p>
-        <small>
-          You can enter space-separated start, finish, and weight values,
-          without units. Durations and weights must be positive (and finite).
-          Floating point numbers and # comments are supported.
-        </small>
+        You can enter space-separated start, finish, and weight values, without
+        units. Durations and weights must be positive (and finite). Floating
+        point numbers and # comments are supported.
       </p>
       <form>
         <fieldset>
@@ -64,43 +54,39 @@
       </form>
       <p id="status">Loading Pyodide&hellip;</p>
       <p id="oom-info" class="omitted">
-        <small>
-          Pages that use Pyodide, including this page, can run out of memory if
-          reloaded many times in the same same tab in Firefox. Closing the tab
-          and opening the page in a new tab often works. When it doesn&rsquo;t,
-          quitting Firefox and running it again almost always works. (Firefox
-          has a bug that makes this likely to occur. See Pyodide issues
-          <a href="https://github.com/pyodide/pyodide/issues/1333#issuecomment-799418194">#1333</a>
-          and
-          <a href="https://github.com/pyodide/pyodide/issues/1513#issuecomment-824221403">#1513</a>
-          and Mozilla bugs
-          <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1141242">#1141242</a>
-          and
-          <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1576829">#1576829</a>.)
-          However, if this happening in other browsers, or without refreshing
-          the page multiple times, or the workarounds don&rsquo;t reliably
-          help, then you&rsquo;ve likely found a bug in this page itself.
-        </small>
+        Pages that use Pyodide, including this page, can run out of memory if
+        reloaded many times in the same same tab in Firefox. Closing the tab
+        and opening the page in a new tab often works. When it doesn&rsquo;t,
+        quitting Firefox and running it again almost always works. (Firefox has
+        a bug that makes this likely to occur. See Pyodide issues
+        <a href="https://github.com/pyodide/pyodide/issues/1333#issuecomment-799418194">#1333</a>
+        and
+        <a href="https://github.com/pyodide/pyodide/issues/1513#issuecomment-824221403">#1513</a>
+        and Mozilla bugs
+        <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1141242">#1141242</a>
+        and
+        <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1576829">#1576829</a>.)
+        However, if this happening in other browsers, or without refreshing the
+        page multiple times, or the workarounds don&rsquo;t reliably help, then
+        you&rsquo;ve likely found a bug in this page itself.
       </p>
       <div id="plot-div"></div>
       <p id="legend" class="omitted">
-        <small>
-          Intervals in the solution are plotted in
-          <span class="swatch-green"></span>&#8239;green.
-          Others are <span class="swatch-gray"></span>&#8239;gray.
-        </small>
+        Intervals in the solution are plotted in
+        <span class="swatch-green"></span>&#8239;green. Others are
+        <span class="swatch-gray"></span>&#8239;gray.
       </p>
     </main>
     <footer>
       <p>
-        <small>
-          <span id="project-name-version">
-            <a href="https://github.com/EliahKagan/weighted-intervals">weighted-intervals, alpha 1</a>
-          </span>
-          <span id="dependency-summary">
-            Built with <a href="https://pyodide.org/en/stable/">Pyodide</a>, <a href="https://matplotlib.org/">Matplotlib</a>, and other libraries.
-          </span>
-        </small>
+        <span id="project-name-version">
+          <a href="https://github.com/EliahKagan/weighted-intervals">weighted-intervals, alpha 1</a>
+        </span>
+        <span id="dependency-summary">
+          Built with <a href="https://pyodide.org/en/stable/">Pyodide</a>,
+          <a href="https://matplotlib.org/">Matplotlib</a>, and other
+          libraries.
+        </span>
       </p>
     </footer>
   </body>

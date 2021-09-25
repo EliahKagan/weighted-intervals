@@ -24,9 +24,16 @@ h1 {
   margin-top: .35rem;
 }
 
+p {
+  color: #555;
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
 p#status {
   background-color: lightyellow;
   color: darkred;
+  font-size: inherit;
   font-weight: 400;
 }
 
@@ -44,13 +51,12 @@ p a {
   text-decoration: none;
 }
 
-p a:hover {
-  background-color: aliceblue;
+main p:hover a, footer p>span:hover a, p:focus-within a {
   border-bottom-color: inherit;
 }
 
-small {
-  color: #555;
+p a:hover, p a:focus {
+  background-color: aliceblue;
 }
 
 fieldset {
@@ -74,28 +80,20 @@ label {
 
 footer {
   margin-top: 2rem;
+  padding-bottom: .8rem;
 }
 
 footer p {
-  line-height: 1.45;
-  padding-bottom: .35rem;
-}
-
-footer small {
   color: inherit;
   font-weight: 300;
 }
 
-footer #project-name-version {
+#project-name-version {
   float: left;
 }
 
-footer #dependency-summary {
+#dependency-summary {
   float: right;
-}
-
-footer #dependency-summary:hover>a {
-  border-bottom-color: inherit;
 }
 
 .omitted {
