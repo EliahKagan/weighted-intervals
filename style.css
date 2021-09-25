@@ -46,12 +46,12 @@ p#status.ok {
 }
 
 p a {
-  border-bottom: 1px solid transparent;
+  border-bottom: .041667rem solid transparent;
   color: initial;
   text-decoration: none;
 }
 
-main p:hover a, footer p>span:hover a, p:focus-within a {
+main p:hover a, footer:hover a, p:focus-within a {
   border-bottom-color: inherit;
 }
 
@@ -101,7 +101,7 @@ footer p {
 }
 
 .swatch-green, .swatch-gray {
-  border: 1px solid black;
+  border: .041667rem solid black;
   display: inline-block;
   height: .9em;
   vertical-align: -20%;
