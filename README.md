@@ -19,7 +19,7 @@
 
 This solves the weighted interval scheduling problem and visualizes the
 solution. It shows text-based output and also plots all input intervals,
-highlighting the ones that part of the solution that was found.
+highlighting the ones that part of the solution it found.
 
 This is *alpha 1* of weighted-intervals. The web version is implemented, but
 buggy. The documentation is also meager&mdash;I&rsquo;ve described the
@@ -51,10 +51,10 @@ uses. In summary: a whole Python interpreter runs in your web browser, and the
 interesting code is in [`wi.py`](wi.py).*
 
 The algorithm used here could be implemented in just about any language,
-including JavaScript, but I&rsquo;ve use Python, which I think is a nice
+including JavaScript, but I&rsquo;ve used Python, which I think is a nice
 language for *expressing* algorithms to humans while still letting them run
-(albeit not always as fast as in some other languages). By Python code does not
-traditionally run in web browsers.
+(albeit not always as fast as in some other languages). But Python code does
+not traditionally run in web browsers.
 
 The web version of weighted-intervals uses
 [Pyodide](https://pyodide.org/en/stable/) to run a Python interpreter in the
