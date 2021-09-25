@@ -82,7 +82,7 @@ wheel](https://pyodide.org/en/stable/usage/loading-packages.html#installing-whee
 
 Until then, if one is just interested in the algorithm, one might prefer to
 look at [the shorter `wi.py` from *alpha
-0*](https://github.com/EliahKagan/weighted-intervals/blob/alpha0/wi.py).
+0*](https://github.com/EliahKagan/weighted-intervals/blob/alpha-0/wi.py).
 
 ## Dependencies
 
