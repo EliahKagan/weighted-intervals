@@ -60,7 +60,7 @@
     const reportAndRethrowIfApparentOutOfMemoryError = function (error) {
         // Use String(error) instead of error.message because occasionally the
         // string "out of memory", rather than an Error object, is thrown.
-        if (String(error).match(/\bout of memory\b/i) === null) {
+        if (!/\bout of memory\b/i.test(String(error))) {
             return;
         }
 
