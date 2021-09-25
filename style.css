@@ -40,7 +40,7 @@ p#status.ok {
 
 p a {
   border-bottom: 1px solid transparent;
-  color: inherit;
+  color: initial;
   text-decoration: none;
 }
 

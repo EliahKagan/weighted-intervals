@@ -63,6 +63,25 @@
         </fieldset>
       </form>
       <p id="status">Loading Pyodide&hellip;</p>
+      <p id="oom-info" class="omitted">
+        <small>
+          Pages that use Pyodide, including this page, can run out of memory if
+          reloaded many times in the same same tab in Firefox. Closing the tab
+          and opening the page in a new tab often works. When it doesn&rsquo;t,
+          quitting Firefox and running it again almost always works. (Firefox
+          has a bug that makes this likely to occur. See Pyodide issues
+          <a href="https://github.com/pyodide/pyodide/issues/1333#issuecomment-799418194">#1333</a>
+          and
+          <a href="https://github.com/pyodide/pyodide/issues/1513#issuecomment-824221403">#1513</a>
+          and Mozilla bugs
+          <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1141242">#1141242</a>
+          and
+          <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1576829">#1576829</a>.)
+          However, if this happening in other browsers, or without refreshing
+          the page multiple times, or the workarounds don&rsquo;t reliably
+          help, then you&rsquo;ve likely found a bug in this page itself.
+        </small>
+      </p>
       <div id="plot-div"></div>
       <p id="legend" class="omitted">
         <small>

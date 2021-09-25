@@ -9,6 +9,7 @@
 
     // Symbolic representations of some Unicode characters.
     const CH = Object.freeze({
+        RSQUO: '\u2019',
         HELLIP: '\u2026',
     });
 
@@ -29,6 +30,34 @@
         }
     };
 
+    // Make the status line show an error message (with error styling).
+    const showError = function (message) {
+        setOk(false);
+        status.innerText = message;
+    };
+
+    // With Pyodide, out of memory errors can come from different places, both
+    // in JavaScript code and in WASM (including marshaled Python exceptions).
+    // This usually happens in Firefox when the page has been reloaded many
+    // times. This usually happens when loading the Python interpreter, but it
+    // sometimes happens when Pyodide loads Matplotlib and other libraries
+    // or when executing our module. Potentially this could occur at any time.
+    const reportAndRethrowIfApparentOutOfMemoryError = function (error) {
+        // Use String(error) instead of error.message because occasionally the
+        // string "out of memory", rather than an Error object, is thrown.
+        if (String(error).match(/\bout of memory\b/i) === null) {
+            return;
+        }
+
+        showError(`Oh no, it looks like we${CH.RSQUO}re out of memory!`);
+
+        if (navigator.userAgent.includes('Firefox')) {
+            document.getElementById('oom-info').classList.remove('omitted');
+        }
+
+        throw error;
+    };
+
     // Attempts an action, showing a status message and optionally throwing.
     const tryRun = async function (rethrow, getMessage, action) {
         try {
@@ -37,8 +66,8 @@
                 await result;
             }
         } catch (error) {
-            setOk(false);
-            status.innerText = getMessage(error);
+            reportAndRethrowIfApparentOutOfMemoryError(error);
+            showError(getMessage(error));
             if (rethrow) {
                 throw error;
             }
