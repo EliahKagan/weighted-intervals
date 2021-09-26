@@ -388,14 +388,17 @@ class Plotter:
     def _try_insert(row, interval):
         """
         Inserts an interval into a row if it would not overlap with any
-        interval already there. This takes time linear in the size of the row.
+        interval already there. This takes time linear in the size of the row
+        if an insertion is performed, and logarithmic time otherwise.
 
-        Implementation note: Binary search (bisect_right) affords no asymptotic
-        speedup here. I still use it, to improve performance by a constant
-        factor if the row is large, by deferencing far fewer pointers than
-        otherwise, which is usually a slow operation compared to moving
-        contiguous memory. (This rationale is analogous to that of the bisect
-        module's "insort" functions.)
+        Implementation note: This is called repeatedly in such a way that
+        binary search (bisect.bisect_right) may afford no asymptotic speedup
+        overall, as many intervals may be placed (before others) in the same
+        row. Nonetheless, insertion into a large row is actually the case I am
+        thinking of in using binary search. A series of comparisons--each
+        dereferencing a pointer to access a Python object--are usually slower,
+        by a constant factor, than moving contiguous memory. (This rationale is
+        analogous to the reason one might sometimes use bisect.insort.)
         """
         finish_times = MappedView(row, operator.attrgetter('finish'))
         index = bisect.bisect_right(finish_times, interval.start)
