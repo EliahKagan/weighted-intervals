@@ -535,5 +535,18 @@ def test_run():
     print(intervals.compute_max_cost_nonoverlapping_subset())
 
 
+__all__ = [thing.__name__ for thing in (
+        WeightedVertex,
+        PathCostPair,
+        IntGraph,
+        Graph,
+        Interval,
+        WeightedInterval,
+        IntervalSet,
+        Plotter,
+        solve_text_input,
+    )]
+
+
 if __name__ == '__main__':
     test_run()
