@@ -318,7 +318,9 @@ class Plotter:
     """Visualizes all input intervals, with solution intervals colored."""
 
     # Plot geometry.
-    TOP_PADDING = 0.05
+    X_PADDING_FRACTION = 0.01
+    TOP_MARGIN = 0.05
+    Y_PADDING = 0.1
     BAR_HEIGHT = 0.8
     BORDER_THICKNESS = 0.3
 
@@ -366,7 +368,7 @@ class Plotter:
                 bc = (self.HIGHLIT_BAR_COLOR if highlight else self.BAR_COLOR)
 
                 ax.add_patch(Rectangle(
-                    xy=(start, i + self.TOP_PADDING),
+                    xy=(start, i + self.TOP_MARGIN),
                     width=(finish - start), height=self.BAR_HEIGHT,
                     edgecolor=self.BORDER_COLOR, facecolor=bc,
                     lw=self.BORDER_THICKNESS))
@@ -410,7 +412,7 @@ class Plotter:
         fig.set_figheight(4)
 
         self._style_axes(ax)
-        self._set_axes_geometry(ax, x_range * 0.01)
+        self._set_axes_geometry(ax, x_range * self.X_PADDING_FRACTION)
 
         return fig, ax
 
@@ -445,7 +447,8 @@ class Plotter:
         ax.set_xlim(xmin=(self._min_start - x_padding),
                     xmax=(self._max_finish + x_padding))
 
-        ax.set_ylim(ymin=-0.1, ymax=(len(self._rows) + 0.1))
+        ax.set_ylim(ymin=-self.Y_PADDING,
+                    ymax=(len(self._rows) + self.Y_PADDING))
 
         ax.invert_yaxis()
 
