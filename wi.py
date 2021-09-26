@@ -319,6 +319,16 @@ class MappedView:
 class Plotter:
     """Visualizes all input intervals, with solution intervals colored."""
 
+    # Plot geometry.
+    TOP_PADDING = 0.05
+    BAR_HEIGHT = 0.8
+    BORDER_THICKNESS = 0.3
+
+    # Plot colors.
+    BORDER_COLOR = 'black'
+    BAR_COLOR = 'gray'
+    HIGHLIT_BAR_COLOR = 'green'
+
     __slots__ = ('_rows', '_min_start', '_max_finish')
 
     def __init__(self):
@@ -351,19 +361,20 @@ class Plotter:
 
         self._rows.append([mwi])
 
-    # TODO: (1) Use symbolic constants for magic numbers. (2) Annotate weights.
+    # TODO: Annotate weights.
     def plot(self):
         """Creates a plot of all added intervals, as SVG code."""
         fig, ax = self._initialize_plot()
 
         for i, row in enumerate(self._rows):
             for start, finish, _weight, highlight in row:
+                bc = (self.HIGHLIT_BAR_COLOR if highlight else self.BAR_COLOR)
+
                 ax.add_patch(Rectangle(
-                    xy=(start, i + 0.05),
-                    width=(finish - start), height=0.8,
-                    edgecolor='black',
-                    facecolor=('green' if highlight else 'gray'),
-                    lw=0.3))
+                    xy=(start, i + self.TOP_PADDING),
+                    width=(finish - start), height=self.BAR_HEIGHT,
+                    edgecolor=self.BORDER_COLOR, facecolor=bc,
+                    lw=self.BORDER_THICKNESS))
 
         with io.StringIO() as dump:
             fig.savefig(dump, format='svg', bbox_inches='tight')
