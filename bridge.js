@@ -131,7 +131,7 @@
             }));
 
         status.innerText =
-            `Loading matplotlib and other libraries${CH.HELLIP}`;
+            `Loading Matplotlib and other libraries${CH.HELLIP}`;
 
         await tryRun(true, _e => "Oh no, Pyodide couldn't load libraries!",
             async () => await py.loadPackage('matplotlib'));
