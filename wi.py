@@ -321,8 +321,6 @@ class Plotter:
 
     __slots__ = ('_rows', '_min_start', '_max_finish')
 
-
-
     def __init__(self):
         """Creates a new plotter, initially holding no intervals."""
         self._rows = []
@@ -334,6 +332,7 @@ class Plotter:
         Adds an interval to be plotted in the first row where it fits.
         This can take time linear in the number of intervals added so far. So
         to add all intervals takes quadratic time (like the solving algorithm).
+        See _try_intervals below.
         """
         if weighted_interval.start >= weighted_interval.finish:
             raise ValueError('refusing to plot nonpositive-duration interval')
@@ -355,18 +354,7 @@ class Plotter:
     # TODO: (1) Use symbolic constants for magic numbers. (2) Annotate weights.
     def plot(self):
         """Creates a plot of all added intervals, as SVG code."""
-        x_range = self._compute_x_range()
-        pad = x_range * 0.01
-
-        fig, ax = plt.subplots()
-        fig.set_figwidth(10)
-        fig.set_figheight(4)
-        self._bottom_spine_only(ax)
-        ax.yaxis.set_visible(False)
-        ax.set_xlim(xmin=(self._min_start - pad),
-                    xmax=(self._max_finish + pad))
-        ax.set_ylim(ymin=-0.1, ymax=(len(self._rows) + 0.1))
-        ax.invert_yaxis()
+        fig, ax = self._initialize_plot()
 
         for i, row in enumerate(self._rows):
             for start, finish, _weight, highlight in row:
@@ -406,6 +394,20 @@ class Plotter:
 
         return False
 
+    def _initialize_plot(self):
+        """Creates and returns our customized Figure and Axes objects."""
+        x_range = self._compute_x_range()  # Do this first, to fail sooner.
+
+        fig, ax = plt.subplots()
+
+        fig.set_figwidth(10)
+        fig.set_figheight(4)
+
+        self._style_axes(ax)
+        self._set_axes_geometry(ax, x_range * 0.01)
+
+        return fig, ax
+
     def _compute_x_range(self):
         """Checks there are intervals to plot and computes the x-range."""
         if not self._rows:
@@ -424,11 +426,22 @@ class Plotter:
         return x_range
 
     @staticmethod
-    def _bottom_spine_only(ax):
-        """Hides all but the bottom spine on a Matplotlib Axes object."""
+    def _style_axes(ax):
+        """Hides all but the lower axis on a Matplotlib Axes object."""
         # Pyodide has Matplotlib 3.3.3, which doesn't support [[...]] syntax.
         for side in ('left', 'right', 'top'):
             ax.spines[side].set_visible(False)
+
+        ax.yaxis.set_visible(False)
+
+    def _set_axes_geometry(self, ax, x_padding):
+        """Applies custom range and orientation for the axes."""
+        ax.set_xlim(xmin=(self._min_start - x_padding),
+                    xmax=(self._max_finish + x_padding))
+
+        ax.set_ylim(ymin=-0.1, ymax=(len(self._rows) + 0.1))
+
+        ax.invert_yaxis()
 
 
 def parse_lines(lines):
