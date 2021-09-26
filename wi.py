@@ -260,13 +260,11 @@ class IntervalSet:
     def compute_max_cost_nonoverlapping_subset(self):
         """
         Solves the weighted job scheduling problem on the intervals.
-        The algorithm's running time is quadratic in the number of intervals.
+        This algorithm's running time is quadratic in the number of intervals.
         """
         graph_path, cost = self._graph.compute_max_cost_path()
 
-        weighted_intervals = [WeightedInterval(start=interval.start,
-                                               finish=interval.finish,
-                                               weight=weight)
+        weighted_intervals = [WeightedInterval(*interval, weight=weight)
                               for interval, weight in graph_path]
 
         return PathCostPair(path=weighted_intervals, cost=cost)
@@ -350,10 +348,7 @@ class Plotter:
         self._min_start = min(self._min_start, weighted_interval.start)
         self._max_finish = max(self._max_finish, weighted_interval.finish)
 
-        mwi = MarkedWeightedInterval(start=weighted_interval.start,
-                                     finish=weighted_interval.finish,
-                                     weight=weighted_interval.weight,
-                                     mark=highlight)
+        mwi = MarkedWeightedInterval(*weighted_interval, mark=highlight)
 
         for row in self._rows:
             if self._try_insert(row, mwi):
