@@ -321,6 +321,8 @@ class Plotter:
 
     __slots__ = ('_rows', '_min_start', '_max_finish')
 
+
+
     def __init__(self):
         """Creates a new plotter, initially holding no intervals."""
         self._rows = []
@@ -353,18 +355,13 @@ class Plotter:
     # TODO: (1) Use symbolic constants for magic numbers. (2) Annotate weights.
     def plot(self):
         """Creates a plot of all added intervals, as SVG code."""
-        if not self._rows:  # TODO: Should this really be an IndexError?
-            raise IndexError('no intervals to plot')
-
-        assert math.isfinite(self._min_start), 'no left (lower) bound'
-        assert math.isfinite(self._max_finish), 'no right (upper) bound'
-        pad = (self._max_finish - self._min_start) * 0.01
+        x_range = self._compute_x_range()
+        pad = x_range * 0.01
 
         fig, ax = plt.subplots()
         fig.set_figwidth(10)
         fig.set_figheight(4)
-        for side in ('left', 'right', 'top'):
-            ax.spines[side].set_visible(False)
+        self._bottom_spine_only(ax)
         ax.yaxis.set_visible(False)
         ax.set_xlim(xmin=(self._min_start - pad),
                     xmax=(self._max_finish + pad))
@@ -395,8 +392,8 @@ class Plotter:
         binary search (bisect.bisect_right) may afford no asymptotic speedup
         overall, as many intervals may be placed (before others) in the same
         row. Nonetheless, insertion into a large row is actually the case I am
-        thinking of in using binary search. A series of comparisons--each
-        dereferencing a pointer to access a Python object--are usually slower,
+        thinking of in using binary search. A sequence of comparisons -- each
+        dereferencing a pointer to access a Python object -- is usually slower,
         by a constant factor, than moving contiguous memory. (This rationale is
         analogous to the reason one might sometimes use bisect.insort.)
         """
@@ -408,6 +405,30 @@ class Plotter:
             return True
 
         return False
+
+    def _compute_x_range(self):
+        """Checks there are intervals to plot and computes the x-range."""
+        if not self._rows:
+            # TODO: Should this really be an IndexError?
+            raise IndexError('no intervals to plot')
+
+        # If the endpoints themselves are infinite or NaN, that's a bug.
+        assert math.isfinite(self._min_start), 'no left (lower) bound'
+        assert math.isfinite(self._max_finish), 'no right (upper) bound'
+
+        x_range = self._max_finish - self._min_start
+        if not math.isfinite(x_range):
+            raise ValueError('plot x-range overflow '
+                             f'({self._min_start} to {self._max_finish})')
+
+        return x_range
+
+    @staticmethod
+    def _bottom_spine_only(ax):
+        """Hides all but the bottom spine on a Matplotlib Axes object."""
+        # Pyodide has Matplotlib 3.3.3, which doesn't support [[...]] syntax.
+        for side in ('left', 'right', 'top'):
+            ax.spines[side].set_visible(False)
 
 
 def parse_lines(lines):
