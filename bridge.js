@@ -28,6 +28,11 @@
         HELLIP: '\u2026',
     });
 
+    // Downloads a file as a string.
+    const fetchText = async function () {
+        return await (await fetch('wi.py')).text();
+    };
+
     // Frequently accessed elements (the input textarea and all outputs).
     const input = document.getElementById('input');
     const output = document.getElementById('output');
@@ -129,13 +134,13 @@
             `Loading matplotlib and other libraries${CH.HELLIP}`;
 
         await tryRun(true, _e => "Oh no, Pyodide couldn't load libraries!",
-            () => py.loadPackage('matplotlib'));
+            async () => await py.loadPackage('matplotlib'));
 
         status.innerText =
             `Running initialization code for this page${CH.HELLIP}`;
 
         await tryRun(true, _e => "Oh no, Pyodide couldn't run the code!",
-            async () => py.runPython(await (await fetch('wi.py')).text()));
+            async () => await py.runPythonAsync(await fetchText('wi.py')));
 
         setOk(true);
         status.innerText = `Pyodide loaded successfully${CH.HELLIP}`;
