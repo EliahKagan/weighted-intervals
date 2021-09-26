@@ -96,6 +96,7 @@ class IntGraph:
         return PathCostPair(path=path, cost=cost)
 
     def _compute_max_cost_path_vertices(self):
+        """Helper for compute_max_cost_path. Emits vertices without weights."""
         if self.order == 0:
             raise ValueError("can't find max weight path in empty graph")
 
@@ -112,6 +113,10 @@ class IntGraph:
         return PathCostPair(path=path, cost=costs[finish])
 
     def _compute_max_weight_paths_tree(self):
+        """
+        Helper for compute_max_cost_path.
+        Emits the parents forest of all max-cost paths from root vertices.
+        """
         parents = [None] * self.order
         costs = self._weights[:]
 
@@ -125,6 +130,10 @@ class IntGraph:
         return parents, costs
 
     def _kahn_toposort(self):
+        """
+        Linearizes (topologically sorts) the graph by Kahn's algorithm.
+        (If the graph has a cycle, this detects it and throws an exception.)
+        """
         tsort = []
         indegs = self._indegrees[:]
         roots = collections.deque(self._find_roots())
@@ -145,10 +154,12 @@ class IntGraph:
         return tsort
 
     def _ensure_exists(self, vertex):
+        """Throws an exception if the vertex is not in range."""
         if not 0 <= vertex < self.order:
             raise ValueError(f'vertex {vertex} is out of range')
 
     def _find_roots(self):
+        """Yields the vertices in the graph that have no incoming edges."""
         return (vertex for vertex, indeg in enumerate(self._indegrees)
                 if indeg == 0)
 
@@ -271,6 +282,7 @@ class IntervalSet:
 
     @staticmethod
     def _check_values(start, finish, weight):
+        """Checks that an interval's values make sense and throws if not."""
         named = (('start', start), ('finish', finish), ('weight', weight))
         for name, value in named:
             if not math.isfinite(value):
