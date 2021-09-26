@@ -119,7 +119,7 @@
         const ret = pyProxy.toJs();
         pyProxy.destroy();
         return ret;
-    }
+    };
 
     // Provides access to the Python interpreter and Python code.
     const pyodide = await (async function () {
