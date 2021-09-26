@@ -330,8 +330,10 @@ class Plotter:
     """Visualizes all input intervals, with solution intervals colored."""
 
     # Plot geometry.
-    X_PADDING_FRACTION = 0.01
+    FIGURE_WIDTH = 10
+    FIGURE_HEIGHT = 4
     TOP_MARGIN = 0.05
+    X_PADDING_FRACTION = 0.01
     Y_PADDING = 0.1
     BAR_HEIGHT = 0.8
     BORDER_THICKNESS = 0.3
@@ -420,8 +422,8 @@ class Plotter:
 
         fig, ax = plt.subplots()
 
-        fig.set_figwidth(10)
-        fig.set_figheight(4)
+        fig.set_figwidth(self.FIGURE_WIDTH)
+        fig.set_figheight(self.FIGURE_HEIGHT)
 
         self._style_axes(ax)
         self._set_axes_geometry(ax, x_range * self.X_PADDING_FRACTION)
