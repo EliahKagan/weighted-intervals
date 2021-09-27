@@ -21,15 +21,16 @@ This solves the weighted interval scheduling problem and visualizes the
 solution. It shows text-based output and also plots all input intervals,
 highlighting the ones that are part of the solution it found.
 
-This is *alpha 1+* of weighted-intervals. The web version is implemented, but
-buggy. The documentation is also meager&mdash;I&rsquo;ve described the
-algorithm I used, somewhat, in [`wi.py`](wi.py), but there should really be a
-Markdown file that explains it clearly. The CLI version is not yet implemented
-(except in the sense that you could import [`wi.py`](wi.py) and interact with
-it as you please).
+This is *alpha 1+* of weighted-intervals. The web version is implemented, though
+there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The CLI
+version is not yet implemented (except in the sense that you could import
+[`wi.py`](wi.py) and interact with it as you please).
 
 [**Try weighted-intervals on the web
 here.**](https://eliahkagan.github.io/weighted-intervals/)
+
+[`ALGORITHM.md`](ALGORITHM.md) describes the algorithm I used and compares it
+to other algorithms for this problem.
 
 ## License
 
@@ -44,7 +45,28 @@ work locally and use the provided
 [`Pipfile`](Pipfile)/[`Pipfile.lock`](Pipfile.lock)). So this whole repository
 is offered under 0BSD.
 
-## How it Works
+## The Problem
+
+Given a set of weighted intervals, where each interval&rsquo;s start time is
+strictly less than its finish time, and each weight is strictly positive, the
+goal is to find a subset of intervals that maximizes the sum of all the
+weights. The weights are sometimes called values; their sum is known as the
+total weight, or cost.
+
+## The Algorithm
+
+**I wrote this program to explore a particular algorithm**, which runs in
+*O(n<sup>2</sup>)* time on *n* intervals. Although this algorithm is faster
+than a *O(2<sup>n</sup>)* brute force check of all subsets, **it is not the
+fastest algorithm**; the problem can be solved in *O(n log n)* time with
+dynamic programming. It is possible that a future version of this program might
+showcase multiple algorithms (which would be valuable in part because different
+algorithms can pick different equally good subsets as solutions).
+
+For information on the algorithm used, and how it relates to other algorithms,
+see [`ALGORITHM.md`](ALGORITHM.md) (and docstrings in [`wi.py`](wi.py)).
+
+## How This Program Works
 
 *This describes how the web version of the software works, not the algorithm it
 uses. In summary: a whole Python interpreter runs in your web browser, and the
@@ -80,8 +102,8 @@ this with multiple modules would be confusing even if there are no clashes. (If
 necessary, I can solve this by [packaging my Python modules in a
 wheel](https://pyodide.org/en/stable/usage/loading-packages.html#installing-wheels-from-arbitrary-urls).)
 
-Until then, if one is just interested in the algorithm, one might prefer to
-look at [the shorter `wi.py` from *alpha
+Until then, if one is just interested in the algorithm implementation, one
+might prefer to look at [the shorter `wi.py` from *alpha
 0*](https://github.com/EliahKagan/weighted-intervals/blob/alpha-0/wi.py).
 
 ## Dependencies
