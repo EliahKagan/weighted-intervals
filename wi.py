@@ -40,7 +40,7 @@ PathCostPair.__doc__ = """A path through a graph, and its cost."""
 class IntGraph:
     """
     A vertex-weighted directed graph whose vertices are integers, numbered
-    increasingly from 0.
+    increasingly from 0. Supports finding a maximum-cost path ("diameter").
     """
 
     __slots__ = ('_adj', '_indegrees', '_weights', '_size')
@@ -85,8 +85,29 @@ class IntGraph:
 
     def compute_max_cost_path(self):
         """
-        Returns a path of maximal cost (total weight), and that cost.
-        The graph must be acyclic. Single-vertex "paths" are considered.
+        Returns a path of maximal cost (total weight), and that cost. The graph
+        must be acyclic. Single-vertex "paths" are considered. (Another way to
+        think of this as finding the "diameter" of a vertex-weighted DAG.) This
+        takes O(n + m) on a graph of n vertices and m edges.
+
+        This is similar to the linear-time algorithm for finding single-source
+        shortest paths in a weighted (i.e., edge-weighted) DAG: it first finds
+        a topological sort of the vertices, then performs relaxations in that
+        order. There are three significant differences:
+
+        (1) We are finding a path of maximum, not minimum, cost (total weight).
+
+        (2) The weights are on the vertices, not the edges. For each vertex v,
+            best-cost-so-far(v) starts at weight(v). To relax an edge (u, v) is
+            to update best-cost-so-far(v) to best-cost(u) + weight(v) if the
+            latter is greater (and update v's predecessor/parent accordingly).
+
+        (3) We are maximizing cost and all weights are positive, so any optimal
+            path begins at a root. We find all roots' optimal paths in linear
+            time (and the result is some optimal choice of those). It is as if
+            we inserted a new root of weight 0 with edges to all the old roots.
+
+        See also ALGORITHM.md.
         """
         vertices, cost = self._compute_max_cost_path_vertices()
 
@@ -212,6 +233,8 @@ class Graph:
         """
         Returns a path of maximal cost (total weight), and that cost.
         The graph must be acyclic. Single-vertex "paths" are considered.
+
+        See IntGraph.compute_max_cost_path for the algorithm.
         """
         int_path, cost = self._graph.compute_max_cost_path()
 
@@ -243,7 +266,32 @@ This is used to specify if it should be highlighted in a plot.
 
 
 class IntervalSet:
-    """A collection of possibly overlapping positive-length intervals."""
+    """
+    A collection of possibly overlapping positive-length weighted intervals.
+
+    This data structure solves the weighted interval scheduling problem in
+    quadratic time. This is faster than the exponential-time brute-force
+    algorithm, but slower than an O(n log n) dynamic programming algorithm
+    given by Jon Kleinberg and Éva Tardos (*Algorithm Design*, pp. 252-260,
+    pub. 2006).
+
+    The quadratic algorithm implemented here first builds a vertex-weighted
+    directed acyclic graph whose vertices are intervals. The edge (u, v) is in
+    the graph iff u finishes no later than v starts. For n intervals, there are
+    up to n(n - 1) such edges, so this takes O(n**2) time. That takes place
+    incrementally as the user repeatedly calls add().
+
+    Then, the graph is topologically sorted and a path that maximizes total
+    weight is found. These operations are each linear in the size (number of
+    edges) of the graph. Finding a max-cost path -- which can also be regarded
+    as finding the "diameter" of the graph -- is similar to finding shortest
+    paths in a DAG. See IntGraph.compute_max_cost_path() for how this is done.
+    There are O(n**2) edges for n intervals, so this also takes O(n**2) time.
+    This happens when the user calls compute_max_cost_nonoverlapping_subset().
+
+    See ALGORITHM.md for a more detailed description of this algorithm, and its
+    conceptual connection to the faster algorithm by Kleinberg and Tardos.
+    """
 
     __slots__ = ('_graph',)
 
@@ -252,7 +300,14 @@ class IntervalSet:
         self._graph = Graph()
 
     def add(self, start, finish, weight):
-        """Adds a weighted interval from start to finish to the collection."""
+        """
+        Adds a weighted interval from start to finish to the collection.
+
+        In the graph representation (see the class docstring), this adds edges
+        into the new interval from each interval that could be scheduled before
+        it, and out of the new interval to each interval that could be
+        scheduled after it.
+        """
         self._check_values(start, finish, weight)
         new_interval = Interval(start, finish)
 
@@ -270,8 +325,10 @@ class IntervalSet:
 
     def compute_max_cost_nonoverlapping_subset(self):
         """
-        Solves the weighted job scheduling problem on the intervals.
-        This algorithm's running time is quadratic in the number of intervals.
+        Solves the weighted job scheduling problem on the intervals. Running
+        time is quadratic in the number of intervals.
+
+        See the class docstring for details on the algorithm.
         """
         graph_path, cost = self._graph.compute_max_cost_path()
 
@@ -303,6 +360,7 @@ class IntervalSet:
 class MappedView:
     """
     A mapped read-only view of a list.
+
     This enables bisect_left and bisect/bisect_right to use custom keys.
     """
 
@@ -354,6 +412,7 @@ class Plotter:
     def add(self, weighted_interval, highlight):
         """
         Adds an interval to be plotted in the first row where it fits.
+
         This can take time linear in the number of intervals added so far. So
         to add all intervals takes quadratic time (like the solving algorithm).
         See _try_intervals below.
