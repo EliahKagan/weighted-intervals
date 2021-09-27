@@ -30,14 +30,6 @@ This program solves the weighted interval scheduling problem in
   Wayne&rsquo;s revised lecture
   slides](https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf#page=7).
 
-It seems to me that my *O(n<sup>2</sup>)* algorithm can be viewed as a less
-smart version of Kleinberg and Tardos&rsquo;s *O(n log n)* algorithm. My
-algorithm can be reformulated in terms of the subproblems they described, and
-it solves each subproblem by consulting the solutions to many (*O(n)*)
-preceding subproblems. But it is only ever necessary to consult the solutions
-of *two* preceding subproblems, which is what their algorithm does. See
-[Discussion](#discussion).
-
 (Note: As a practical matter, currently, in the web version of this program,
 slow operation is usually due mostly to the visualization. See
 [`BUGS.md`](BUGS.md).)
@@ -51,9 +43,7 @@ The quadratic algorithm I&rsquo;ve used has two stages:
 First it builds a vertex-weighted directed
 acyclic graph whose vertices are intervals. The edge *(u, v)* is in the graph
 iff *u* finishes no later than *v* starts. For *n* intervals, there are up to
-*n(n - 1)* such edges, so this takes *O(n<sup>2</sup>)* time. That takes place
-incrementally as the user repeatedly calls `IntervalSet.add()` in
-[`wi.py`](wi.py).
+*n(n - 1)* such edges, so this takes *O(n<sup>2</sup>)* time.
 
 ### 2. Find the max-cost path.
 
@@ -96,3 +86,28 @@ input order or sorted, could be treated as an implicit graph.
 Likewise, topological sorting does not have to be done as a distinct step. This
 could be, in effect, interleaved with the operation of updating each
 vertex&rsquo;s information about the best known path to it so far.
+
+I used [Kahn&rsquo;s
+algorithm](https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm),
+with a queue (FIFO), to compute a topological sort of the forward-compatibility
+DAG. This is one of [various possible
+approaches](#Variations-on-the-algorithm-should-be-supported) for finding a
+topological sort. I chose Kahn&rsquo;s algorithm because I find it to be the
+simplest to understand when implemented iteratively.
+
+In most environments,
+recursively implemented DFS will overflow the stack on common problem sizes in
+the setting of this problem, since recursion depth is as great as the
+cardinality of the largest solution (regardless of which solution is actually
+chosen). DFS toposort can be implemented iteratively in such a way as to
+produce the same result as recursive implementation&mdash;such as with a state
+machine, or by mutating the graph to remove edges&mdash;but that code is more
+complicated to understand.
+
+I used a queue because I think that&rsquo;s the most intuitive, and the most
+common implementation choice for Kahn&rsquo;s algorithm. But a stack works just
+as well. (These will produce different&mdash;but both correct&mdash;topological
+orderings in some cases.)
+
+Arguably, the most elegant way to implement this whole algorithm is to
+interleave all the steps, and do everything recursively.
