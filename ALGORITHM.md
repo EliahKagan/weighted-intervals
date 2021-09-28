@@ -77,7 +77,7 @@ Like constructing the graph, finding the maximum cost path also takes
 *O(|V| + |E|)* time, which is *O(n<sup>2</sup>)* since *|E| =
 O(n<sup>2</sup>)*. So that is the running time of the whole algorithm.
 
-## Discussion
+## Implementation Notes
 
 It is not really necessary to build an explicit graph as its own data structure
 before finding a path of maximum cost. A collection of the intervals, either in
@@ -93,13 +93,13 @@ with a queue (FIFO), to compute a topological sort of the forward-compatibility
 DAG. This is one of [various possible
 approaches](#Variations-on-the-algorithm-should-be-supported) for finding a
 topological sort. I chose Kahn&rsquo;s algorithm because I find it to be the
-simplest to understand when implemented iteratively.
+simplest to understand when implemented iteratively (compared to iterative
+implementations of other algorithms).
 
-In most environments,
-recursively implemented DFS will overflow the stack on common problem sizes in
-the setting of this problem, since recursion depth is as great as the
-cardinality of the largest solution (regardless of which solution is actually
-chosen). DFS toposort can be implemented iteratively in such a way as to
+In most environments, recursively implemented DFS will overflow the stack on
+common problem sizes in the setting of this problem, since recursion depth can
+be as great as the cardinality of the largest solution (even if that solution
+is not chosen). DFS toposort can be implemented iteratively in such a way as to
 produce the same result as recursive implementation&mdash;such as with a state
 machine, or by mutating the graph to remove edges&mdash;but that code is more
 complicated to understand.
@@ -110,4 +110,61 @@ as well. (These will produce different&mdash;but both correct&mdash;topological
 orderings in some cases.)
 
 Arguably, the most elegant way to implement this whole algorithm is to
-interleave all the steps, and do everything recursively.
+interleave all the steps, and do everything recursively, by DFS. While any
+interval is unvisited, pick an unvisited interval and start DFS from there,
+advancing as far as possible. Then, while retreating from an interval *v* to an
+interval *u*, check if including *v* gives a higher-cost subset than previously
+seen at *u*. If so, update *u* with the new cost (and record *v* as its
+successor/child). After all this, find the interval of highest recorded cost
+(which should not be confused with that interval&rsquo;s weight). Following the
+path from that root interval to a leaf interval (one with no successor) gives
+all the intervals in an optimal solution.
+
+(This does not affect asymptotic time complexity.)
+
+I didn&rsquo;t do it that way, because:
+
+- Doing this recursively would cause stack overflows on moderate or large input
+  sizes.
+- I thought the algorithm would be easier to understand if modularized and
+  expressed in terms of abstract data types for graphs.
+- I wanted to convey, and also explore, the way this can be viewed abstractly
+  as a graph problem.
+
+But I&rsquo;ve come to think there are two disadvantages to the implementation
+approach I chose:
+
+- This is more code than if I had interleaved the parts would likely be (even
+  compared to structuring it around Kahn&rsquo;s algorithm rather than
+  recursive DFS). That makes it hard to figure out how complex this algorithm
+  really is, compared to other algorithms (such as Kleinberg & Tardos&rsquo;s
+  faster dynamic programming algorithm).
+- It seems to me that the relationship between this algorithm and that of
+  Kleinberg & Tardos would be better elucidated by interleaving the steps.
+
+## Kleinberg & Tardos&rsquo;s algorithm
+
+In the algorithm given by Jon Kleinberg and Éva Tardos in [*Algorithm
+Design*](https://www.pearson.com/us/higher-education/program/Kleinberg-Algorithm-Design/PGM319216.html),
+intervals are sorted by finishing time (with ties broken arbitrarily) and
+numbered 1 through *n*. The solution to each subproblem consisting of first *j*
+intervals (or that solution&rsquo;s cost) is to be memoized or tabulated in
+*M[j]*. A subroutine *p(j)* returns the highest *i* whose finishing time is no
+later than *j*&rsquo;s start time; as mentioned in the [revised version of the
+slides by Kevin
+Wayne](https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf#page=7)
+that complement the book, *p(j)* can be computed in *O(log j)* time with binary
+search.
+
+The solution to subproblem 0 is the empty set (or a cost of zero). The solution
+to subproblem *j > 0* either does not contain the interval *j*, in which case
+it is the same as the solution to *j - 1*, or does contain the interval *j*, in
+which case it is the result of adding the interval *j* to the solution to
+subproblem *p(j)*. Whichever of these produces a higher total weight is to be
+chosen (with ties broken arbitrarily). Each subproblem need only be solved
+once, and *0, 1, 2, &hellip;, n - 1, n* is a topological ordering of the
+computation DAG.
+
+## Relationship between the two algorithms
+
+In Kleinberg & Tardos&rsquo;s presentation, the costs were stored in *M* and
