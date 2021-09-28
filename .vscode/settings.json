@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "Aparna",
         "deque",
         "docstrings",
         "elems",
@@ -9,13 +10,20 @@
         "indegrees",
         "indegs",
         "Kagan",
+        "Kleinberg",
         "linearizes",
         "Matplotlib",
+        "pipenv",
+        "Pipfile",
         "preconnect",
         "Pyodide",
         "pyplot",
         "referrerpolicy",
+        "replots",
         "RSQUO",
+        "subproblems",
+        "Tardos",
+        "toposort",
         "tsort",
         "uncommented",
         "xlim",
@@ -27,6 +35,7 @@
         "ymin"
     ],
     "cSpell.ignoreWords": [
+        "didn",
         "doesn",
         "stylesheet"
     ]

@@ -52,6 +52,22 @@ Users might not always want the intervals to have weight labels in the plot,
 because of the increased visual noise when there are many intervals. But I
 think this should at least be an option.
 
+### The Python code should be separated into multiple modules.
+
+As [detailed in `README.md`](README.md#how-this-program-works), currently all
+the Python code is in a single module. The reason is that, in the web version,
+the way I&rsquo;m loading the Python code into the WebAssembly CPython
+interpreter provided by Pyodide runs it in the calling module. With multiple
+modules, this situation would be confusion, even if there were no name clashes.
+
+This can be fixed, though I&rsquo;m hoping there&rsquo;s an alternative to
+making a wheel and shipping it in the repository (and making sure to recreate
+it every time there is a change). I&rsquo;m willing to do that if necessary.
+
+It&rsquo;s not that the single `.py` file is excessively long at this time.
+Rather, having it all in one module makes it harder to identify, and to just
+read, the code for the algorithm, which I consider undesirable.
+
 ## Missing Features
 
 ### Variations on the algorithm should be supported.

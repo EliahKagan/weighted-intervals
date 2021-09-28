@@ -34,6 +34,15 @@ This program solves the weighted interval scheduling problem in
 slow operation is usually due mostly to the visualization. See
 [`BUGS.md`](BUGS.md).)
 
+For full details of the algorithm and how I implemented it, the code itself is
+fairly readable, and includes docstrings. See [`wi.py`](wi.py). However, that
+file also contains code for visualizing the solution and for helping to marshal
+data between Python and JavaScript. So [the shorter `wi.py` from *alpha
+0*](https://github.com/EliahKagan/weighted-intervals/blob/alpha-0/wi.py) may be
+of interest (though it does not have as detailed docstrings).
+
+A high-level description of the algorithm, and discussion, follows.
+
 ## Stages
 
 The quadratic algorithm I&rsquo;ve used has two stages:
@@ -109,6 +118,8 @@ common implementation choice for Kahn&rsquo;s algorithm. But a stack works just
 as well. (These will produce different&mdash;but both correct&mdash;topological
 orderings in some cases.)
 
+### Another Implementation Approach
+
 Arguably, the most elegant way to implement this whole algorithm is to
 interleave all the steps, and do everything recursively, by DFS. While any
 interval is unvisited, pick an unvisited interval and start DFS from there,
@@ -167,4 +178,67 @@ computation DAG.
 
 ## Relationship between the two algorithms
 
-In Kleinberg & Tardos&rsquo;s presentation, the costs were stored in *M* and
+*I might update this section in the future when I have more precise insights into
+the relationship between these two algorithms, or with corrections.*
+
+In Kleinberg & Tardos&rsquo;s presentation, the costs were stored in *M*. The
+actual solution&mdash;a subset of intervals&mdash;was built from them
+afterwards. Storing the subsets, separately, at each position in *M*, would use
+asymptotically more space, and also take asymptotically more time to process.
+
+An alternative approach to implementing their algorithm is for *M[j]* to store,
+for each interval *j > 0*:
+
+- a cost
+- the &ldquo;predecessor&rdquo; *i* whose solution was used to solve *j*, which
+  is *j - 1* or *p(j)*
+- a boolean value indicating whether interval *j* is included in the solution
+  for the subproblem up to *j*
+
+For *j = 0*, the cost is 0, the predecessor is *nil*, and the boolean value
+indicating if it is to be included is *false*.
+
+This is a compact way of storing the solution. Enumerating the elements of the
+solution still requires another pass, but this pass just reads off the results,
+rather than recomputing anything. (In particular, values of *p(j)* need neither
+be recomputed nor computed ahead of time.) Then, after all subproblems are
+solved, the path back through the &ldquo;predecessors,&rdquo; starting at *n*,
+can be followed, and the subset of intervals that appear along the path and
+whose boolean values indicate they are to be included can be constructed.
+
+This now resembles an algorithm for finding an optimal path in a graph.
+Choosing between including and not including an interval (in the first pass)
+sort of looks like a relaxation, in which a parent/predecessor is updated when
+a better cost is achieved. Representing the solution compactly as a tree of
+paths in the reverse of the order in which they are naturally followed
+resembles the way many algorithms for finding shortest or longest paths in a
+graph return results, including Dijkstra&rsquo;s algorithm and my algorithm for
+solving this problem. The particular way 0 is treated specially&mdash;as a root
+added for convenience of computation&mdash;is, as [phrased
+above](#2-find-the-max-cost-path), &ldquo;as if we inserted a new root of
+weight 0 with edges to all the old roots.&rdquo;
+
+Based on this, I am *tempted* to say that my algorithm is an unnecessarily
+redundant, slower variant of Kleinberg & Tardos&rsquo;s algorithm. Suppose,
+instead of checking the solutions to two previous subproblems, one checked
+*all* the solutions that were available so far (rejecting those for intervals
+that overlap the current interval). This quadratic algorithm&mdash;a worsening
+of Kleinberg & Tardos&rsquo;s algorithm&mdash;seems a lot like my algorithm,
+especially if my algorithm is implemented in [the alternative way described
+above](#another-implementation-approach).
+
+But I think that is not quite correct. Kleinberg & Tardos&rsquo;s algorithm
+does not simply check the two subproblems that the current subproblem depends
+on (rather than all *O(n)* subproblems whose solutions are available). It also
+*causes* the current subproblem to depend only on (up to) two preceding
+subproblems. It does this by propagating best-solution information even through
+subproblems ending at intervals that are not part of the optimal subset being
+built. That is, *M[j]* is correct for the subset of intervals from 1 to *j*
+even when the solution does not include *j*.
+
+This is to say that it&rsquo;s not just that my algorithm doesn&rsquo;t relaxes
+more edges in the DAG than necessary. It also doesn&rsquo;s store enough
+information to avoid doing so. When an edge *(u, v)* is relaxed, the cost at
+*v* is updated only if the path through *u* is better than the best path
+including *v* so far. Relaxations don&rsquo;t update *v* with information from
+*u* about other vertices, when *u* is not to be used.

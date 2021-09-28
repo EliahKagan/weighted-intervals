@@ -17,11 +17,11 @@
 
 # weighted-intervals - job scheduling with weighted intervals
 
-This solves the weighted interval scheduling problem and visualizes the
-solution. It shows text-based output and also plots all input intervals,
-highlighting the ones that are part of the solution it found.
+This solves instances of the weighted interval scheduling problem and
+visualizes its solutions. It shows text-based output and also plots all input
+intervals, highlighting the ones that are part of the solution it found.
 
-This is *alpha 1+* of weighted-intervals. The web version is implemented, though
+This is *alpha 2* of weighted-intervals. The web version is implemented, though
 there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The CLI
 version is not yet implemented (except in the sense that you could import
 [`wi.py`](wi.py) and interact with it as you please).
@@ -156,4 +156,22 @@ And these fonts:
   1.1](https://github.com/adobe-fonts/source-code-pro/blob/release/LICENSE.md)
   (&copy; Adobe, with reserved font name &ldquo;Source&rdquo;).
 
-I&rsquo;m thankful to the authors and contributors of all those projects.
+## Acknowledgements
+
+I&rsquo;d like to thank:
+
+- [**Professor Aparna Das**](https://web.lemoyne.edu/~dasa/), who introduced me
+  to the weighted interval scheduling problem and to the work of Jon Kleinberg
+  and Éva Tardos on this problem.
+- [**Jon Kleinberg**](https://www.cs.cornell.edu/home/kleinber/) and [**Éva
+  Tardos**](https://www.cs.cornell.edu/~eva/), who presented a different (and
+  better) solution than mine to this problem, in [*Algorithm
+  Design*](https://www.pearson.com/us/higher-education/program/Kleinberg-Algorithm-Design/PGM319216.html),
+  1st ed. (pub. 2006), sec. 6.1, pp. 252-260; and [**Kevin
+  Wayne**](https://www.cs.princeton.edu/~wayne/contact/), who made [reference
+  slides](https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf#page=7)
+  on that material, which I also found useful.
+- The authors/contributors of the dependencies listed above.
+
+(Please note, none of those people is responsible for bugs in this program or
+in its documentation.)
