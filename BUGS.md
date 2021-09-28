@@ -40,9 +40,9 @@ automatically). It would be nice to figure out a way to make the plotting
 significantly faster.
 
 But the real, most important solution here is to allow the user keep entering
-input even once the computation has started, and to cancel the computation,
-either if the input describes a different problem instance or always. (The
-latter should be easier and also sufficient.)
+input even once the computation has started, and for this to cancel the
+computation automatically&mdash;either if the input describes a different
+problem instance, or always. (The latter should be easier and also sufficient.)
 
 ### The plot doesn&rsquo;t show the intervals&rsquo; weights.
 
@@ -137,11 +137,11 @@ I&rsquo;m not sure how to make the plot faster, other than by marshaling the
 information to create it from Python to JavaScript and using a JavaScript
 library. But it would be nice.
 
-*If successful*, such a change would also likely improve
+*If successful*, doing it that way would also likely improve
 [responsiveness](#the-interface-is-not-responsive-enough) and facilitate [plot
 interaction](#the-plot-is-not-interactive).
 
-### [The DAG](ALGORITHM.md#build-a-forward-compatibility-DAG) should also be visualized.
+### [The DAG](ALGORITHM.md#1-build-a-forward-compatibility-DAG) should also be visualized.
 
 I tried drawing the DAG using NetworkX (which Pyodide conveniently supplies, as
 it does Matplotlib), but this was too slow. I also did not figure out a way to

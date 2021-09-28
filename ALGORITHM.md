@@ -75,9 +75,9 @@ significant differences:
   greater (and update *v*&rsquo;s predecessor/parent accordingly).
 
 - Since we are maximizing cost and all weights are positive, any optimal path
-  begins at a root. We find all roots&rsquo; optimal paths in *O(|E|)* time,
-  and the result is some optimal choice of those. It is as if we inserted a new
-  root of weight 0 with edges to all the old roots.
+  begins at a root. We find all roots&rsquo; optimal paths in *O(|V| + |E|)*
+  time, and the result is some optimal choice of those. It is as if we inserted
+  a new root of weight 0 with edges to all the old roots.
 
 The set of intervals appearing on that path can all be scheduled together and
 their total weight is maximal.
@@ -100,10 +100,10 @@ I used [Kahn&rsquo;s
 algorithm](https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm),
 with a queue (FIFO), to compute a topological sort of the forward-compatibility
 DAG. This is one of [various possible
-approaches](#Variations-on-the-algorithm-should-be-supported) for finding a
-topological sort. I chose Kahn&rsquo;s algorithm because I find it to be the
-simplest to understand when implemented iteratively (compared to iterative
-implementations of other algorithms).
+approaches](BUGS.md#variations-on-the-algorithm-should-be-supported) for
+finding a topological sort. I chose Kahn&rsquo;s algorithm because I find it to
+be the simplest to understand when implemented iteratively (compared to
+iterative implementations of other algorithms).
 
 In most environments, recursively implemented DFS will overflow the stack on
 common problem sizes in the setting of this problem, since recursion depth can
@@ -144,11 +144,11 @@ I didn&rsquo;t do it that way, because:
 But I&rsquo;ve come to think there are two disadvantages to the implementation
 approach I chose:
 
-- This is more code than if I had interleaved the parts would likely be (even
-  compared to structuring it around Kahn&rsquo;s algorithm rather than
-  recursive DFS). That makes it hard to figure out how complicated this
-  algorithm really is, compared to other algorithms (such as Kleinberg &
-  Tardos&rsquo;s faster dynamic programming algorithm).
+- This is more code than interleaving the parts would likely be (even if I
+  structured it around Kahn&rsquo;s algorithm rather than recursive DFS). That
+  makes it hard to figure out how complicated this algorithm really is,
+  compared to other algorithms (such as Kleinberg & Tardos&rsquo;s faster
+  dynamic programming algorithm).
 - It seems to me that the relationship between this algorithm and that of
   Kleinberg & Tardos would be better elucidated by interleaving the steps.
 
@@ -236,7 +236,7 @@ built. That is, *M[j]* is correct for the subset of intervals from 1 to *j*
 even when the solution does not include *j*.
 
 This is to say that it&rsquo;s not just that my algorithm happens to relax more
-edges in the DAG than necessary. It also doesn&rsquo;s store enough information
+edges in the DAG than necessary. It also doesn&rsquo;t store enough information
 to avoid doing so. When an edge *(u, v)* is relaxed, the cost at *v* is updated
 only if the path through *u* is better than the best path including *v* so far.
 Relaxations don&rsquo;t update *v* with information from *u* about other
