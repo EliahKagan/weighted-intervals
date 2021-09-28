@@ -25,7 +25,7 @@ should be improved.
 ### The interface is not responsive enough.
 
 The web version reruns the algorithm and replots the visualization whenever the
-user make a change to the input &ldquo;All intervals&rdquo;
+user makes a change to the input &ldquo;All intervals&rdquo;
 textarea&mdash;after waiting 200 milliseconds, to maintain responsive typing.
 
 That wait, even though it is only a fifth of a second, is less gratifying than
@@ -35,8 +35,9 @@ the time to update is much longer than 200 ms. Then characters entered into the
 textarea appear slowly, which is frustrating.
 
 It seems the slowest step is plotting the intervals. As a stopgap measure,
-there could be a checkbox to disable that. It would be nice to figure out a way
-to make the plotting significantly faster.
+there could be a checkbox to disable that (or to disable doing it
+automatically). It would be nice to figure out a way to make the plotting
+significantly faster.
 
 But the real, most important solution here is to allow the user keep entering
 input even once the computation has started, and to cancel the computation,
@@ -58,22 +59,22 @@ As [detailed in `README.md`](README.md#how-this-program-works), currently all
 the Python code is in a single module. The reason is that, in the web version,
 the way I&rsquo;m loading the Python code into the WebAssembly CPython
 interpreter provided by Pyodide runs it in the calling module. With multiple
-modules, this situation would be confusion, even if there were no name clashes.
+modules, this situation would be confusing, even if there were no name clashes.
 
 This can be fixed, though I&rsquo;m hoping there&rsquo;s an alternative to
 making a wheel and shipping it in the repository (and making sure to recreate
 it every time there is a change). I&rsquo;m willing to do that if necessary.
 
 It&rsquo;s not that the single `.py` file is excessively long at this time.
-Rather, having it all in one module makes it harder to identify, and to just
-read, the code for the algorithm, which I consider undesirable.
+Rather, having it all in one module may make it harder to find and read the
+code for the algorithm.
 
 ## Missing Features
 
 ### Variations on the algorithm should be supported.
 
 The user should be able to specify the algorithm used for the topological sort.
-This can affect which solutions is found, when there is more than one optimal
+This can affect which solution is found, when there is more than one optimal
 subset.
 
 Currently, I&rsquo;m using [Kahn&rsquo;s
@@ -81,11 +82,11 @@ algorithm](https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm)
 with a queue (FIFO). It would be nice also to support recursive DFS with a
 reliable error message on stack overflow (which should be possible *in the web
 version* as it is running in a separate interpreter), DFS implemented
-iteratively with a state machine (which emits vertices in the same order),
-Kahn&rsquo;s algorithm with a stack (LIFO), and Kahn&rsquo;s algorithm
-implemented recursively (this is an unusual way to implement Kahn&rsquo;s
-algorithm but it can be done&mdash;it recurses from each of the DAG&rsquo;s
-original roots).
+iteratively with a state machine (which emits vertices in the same order as
+recursive DFS), Kahn&rsquo;s algorithm with a stack (LIFO), and Kahn&rsquo;s
+algorithm implemented recursively (this is an unusual way to implement
+Kahn&rsquo;s algorithm but it can be done&mdash;it recurses from each of the
+DAG&rsquo;s original roots).
 
 ### Kleinberg & Tardos&rsquo;s algorithm should be supported, too.
 
@@ -96,9 +97,8 @@ showcase, and better elucidate the connection to, their algorithm. It would
 also allow users to compare results between algorithms, which can be different
 when there is more than one correct solution.
 
-*If* visualization were also made
-to run much faster, than it is possible that runs would be noticeable faster
-with that algorithm, too.
+*If* visualization were also made much faster, than it is possible that runs
+would be noticeably faster with that algorithm.
 
 ### The plot should be customizable.
 

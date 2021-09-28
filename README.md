@@ -173,5 +173,5 @@ I&rsquo;d like to thank:
   on that material, which I also found useful.
 - The authors/contributors of the dependencies listed above.
 
-(Please note, none of those people is responsible for bugs in this program or
-in its documentation.)
+(None of those people is responsible for bugs in this program or in its
+documentation.)
