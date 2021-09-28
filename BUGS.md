@@ -53,6 +53,18 @@ Users might not always want the intervals to have weight labels in the plot,
 because of the increased visual noise when there are many intervals. But I
 think this should at least be an option.
 
+### The status line sometimes reports costs with excessive precision.
+
+Having to do with the way rounding is done, one often sees things like this:
+
+> OK. Total cost is 24.299999999999997, using 6 intervals.
+
+That happens, in part, because floating point computations are performed, and
+the results stored, in binary, but results are reported in decimal.
+
+When all the inputs have much lower precision, fewer figures should be
+retained.
+
 ### The Python code should be separated into multiple modules.
 
 As [detailed in `README.md`](README.md#how-this-program-works), currently all
