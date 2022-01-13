@@ -21,9 +21,9 @@ This solves instances of the weighted interval scheduling problem and
 visualizes its solutions. It shows text-based output and also plots all input
 intervals, highlighting the ones that are part of the solution it found.
 
-This is *alpha 2* of weighted-intervals. The web version is implemented, though
-there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The CLI
-version is not yet implemented (except in the sense that you could import
+This is *alpha 2+* of weighted-intervals. The web version is implemented,
+though there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The
+CLI version is not yet implemented (except in the sense that you could import
 [`wi.py`](wi.py) and interact with it as you please).
 
 [**Try weighted-intervals on the web
