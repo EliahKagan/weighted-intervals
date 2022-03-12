@@ -21,7 +21,7 @@ This solves instances of the weighted interval scheduling problem and
 visualizes its solutions. It shows text-based output and also plots all input
 intervals, highlighting the ones that are part of the solution it found.
 
-This is *alpha 3* of weighted-intervals. The web version is implemented,
+This is *alpha 3+* of weighted-intervals. The web version is implemented,
 though there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The
 CLI version is not yet implemented (except in the sense that you could import
 [`wi.py`](wi.py) and interact with it as you please).
@@ -113,20 +113,18 @@ in this repository.
 
 **weighted-intervals** uses these libraries:
 
-- [**Pyodide**](https://pyodide.org/en/stable/) (latest version), by the
-  [Pyodide development team](https://pyodide.org/en/stable/project/about.html)
-  ([Mozilla Public License
-  2.0](https://github.com/pyodide/pyodide/blob/main/LICENSE)). This supplies [a
-  WebAssembly port](https://github.com/pyodide/pyodide/tree/main/cpython) of
-  [CPython](https://www.python.org/) (currently version 3.9) and various
-  libraries. All recent versions of [CPython
-  itself](https://github.com/python/cpython) are [licensed
+- [**Pyodide**](https://pyodide.org/en/stable/) 0.19.1, by the [Pyodide
+  development team](https://pyodide.org/en/stable/project/about.html) ([Mozilla
+  Public License 2.0](https://github.com/pyodide/pyodide/blob/main/LICENSE)).
+  This supplies [a WebAssembly
+  port](https://github.com/pyodide/pyodide/tree/main/cpython) of
+  [CPython](https://www.python.org/) 3.9.5 and various libraries. All recent
+  versions of [CPython itself](https://github.com/python/cpython) are [licensed
   under](https://github.com/python/cpython/blob/main/LICENSE) the [Python
   Software Foundation License 2.0](https://spdx.org/licenses/PSF-2.0.html).
-- [**Matplotlib**](https://matplotlib.org/) ([as of this writing, version
-  3.3.3](https://github.com/pyodide/pyodide/blob/main/packages/matplotlib/meta.yaml)
-  in the web version; but my [`Pipfile`](Pipfile) requests 3.4.3) by the
-  Matplotlib Development Team. Matplotlib is licensed under the [License
+- [**Matplotlib**](https://matplotlib.org/)
+  [3.5.1](https://github.com/pyodide/pyodide/blob/main/packages/matplotlib/meta.yaml)
+  by the Matplotlib Development Team. Matplotlib is licensed under the [License
   agreement for matplotlib versions 1.3.0 and
   later](https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE).
   It includes some components by other authors with other licenses. See the
