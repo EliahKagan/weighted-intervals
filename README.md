@@ -113,7 +113,7 @@ in this repository.
 
 **weighted-intervals** uses these libraries:
 
-- [**Pyodide**](https://pyodide.org/en/stable/) 0.21.0, by the [Pyodide
+- [**Pyodide**](https://pyodide.org/en/stable/) 0.21.1, by the [Pyodide
   development team](https://pyodide.org/en/stable/project/about.html) ([Mozilla
   Public License 2.0](https://github.com/pyodide/pyodide/blob/main/LICENSE)).
   This supplies [a WebAssembly
