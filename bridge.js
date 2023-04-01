@@ -127,7 +127,7 @@
 
         await tryRun(true, _e => 'Oh no, Pyodide failed to load!',
             async () => py = await loadPyodide({
-                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.22.1/full/'
+                indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.0/full/'
             }));
 
         status.innerText =
