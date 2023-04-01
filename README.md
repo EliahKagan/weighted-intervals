@@ -21,7 +21,7 @@ This solves instances of the weighted interval scheduling problem and
 visualizes its solutions. It shows text-based output and also plots all input
 intervals, highlighting the ones that are part of the solution it found.
 
-This is *alpha 3+* of weighted-intervals. The web version is implemented,
+This is *alpha 4* of weighted-intervals. The web version is implemented,
 though there are some bugs and missing features. See [`BUGS.md`](BUGS.md). The
 CLI version is not yet implemented (except in the sense that you could import
 [`wi.py`](wi.py) and interact with it as you please).
@@ -113,12 +113,12 @@ in this repository.
 
 **weighted-intervals** uses these libraries:
 
-- [**Pyodide**](https://pyodide.org/en/stable/) 0.22.1, by the [Pyodide
+- [**Pyodide**](https://pyodide.org/en/stable/) 0.23.0, by the [Pyodide
   development team](https://pyodide.org/en/stable/project/about.html) ([Mozilla
   Public License 2.0](https://github.com/pyodide/pyodide/blob/main/LICENSE)).
   This supplies [a WebAssembly
   port](https://github.com/pyodide/pyodide/tree/main/cpython) of
-  [CPython](https://www.python.org/) 3.10.2 and various libraries. All recent
+  [CPython](https://www.python.org/) 3.11.2 and various libraries. All recent
   versions of [CPython itself](https://github.com/python/cpython) are [licensed
   under](https://github.com/python/cpython/blob/main/LICENSE) the [Python
   Software Foundation License 2.0](https://spdx.org/licenses/PSF-2.0.html).
