@@ -36,6 +36,7 @@ PathCostPair = collections.namedtuple('PathCostPair', ('path', 'cost'))
 
 PathCostPair.__doc__ = """A path through a graph, and its cost."""
 
+
 class IntGraph:
     """
     A vertex-weighted directed graph whose vertices are integers, numbered
