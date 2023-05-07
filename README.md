@@ -113,12 +113,12 @@ in this repository.
 
 **weighted-intervals** uses these libraries:
 
-- [**Pyodide**](https://pyodide.org/en/stable/) 0.23.0, by the [Pyodide
+- [**Pyodide**](https://pyodide.org/en/stable/) 0.23.2, by the [Pyodide
   development team](https://pyodide.org/en/stable/project/about.html) ([Mozilla
   Public License 2.0](https://github.com/pyodide/pyodide/blob/main/LICENSE)).
   This supplies [a WebAssembly
   port](https://github.com/pyodide/pyodide/tree/main/cpython) of
-  [CPython](https://www.python.org/) 3.11.2 and various libraries. All recent
+  [CPython](https://www.python.org/) 3.11.3 and various libraries. All recent
   versions of [CPython itself](https://github.com/python/cpython) are [licensed
   under](https://github.com/python/cpython/blob/main/LICENSE) the [Python
   Software Foundation License 2.0](https://spdx.org/licenses/PSF-2.0.html).
