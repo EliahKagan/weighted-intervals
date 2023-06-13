@@ -148,7 +148,8 @@ And these fonts:
   (&copy; Adobe, with reserved font name &ldquo;Source&rdquo;). This font is
   now called [Source Sans 3](https://github.com/adobe-fonts/source-sans) in the
   current version, but I&rsquo;m using [Source Sans
-  Pro](https://fonts.google.com/specimen/Source+Sans+Pro), an earlier version.
+  Pro](https://github.com/google/fonts/tree/5b3565e1fe5deface5aae83dd5f6ed07dc77a53d/ofl/sourcesanspro),
+  an earlier version.
 - [**Source Code Pro**](https://adobe-fonts.github.io/source-code-pro/),
   designed by Paul D. Hunt and licensed under the [SIL OFL
   1.1](https://github.com/adobe-fonts/source-code-pro/blob/release/LICENSE.md)
